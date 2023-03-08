@@ -12,7 +12,6 @@ import heapq
 from utils.timer import time_controller
 
 from queue import LifoQueue as Stack
-from queue import Queue
 
 
 class ProblemSolvingAgent:
@@ -59,43 +58,41 @@ class ProblemSolvingAgent:
 
     def DFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
-        parents = {}
-        stack = Stack()
-        stack.put(start_pos)
-        while stack.not_empty:
-            cur_pos = stack.get()
-            if cur_pos in visited:
-                continue
 
-            visited.append(cur_pos)
-
-            if cur_pos == goal_pos:
-                # path.append(goal_pos)
-                path = self.parents2path(parents, goal_pos, start_pos)
-                break
-
-            for neigh in self.neighbours_of(obstacles, cur_pos):
-                if neigh[0] not in visited:
-                    stack.put(neigh[0])
-                    parents[neigh[0]] = cur_pos
-
+        self._DFS(obstacles, goal_pos, start_pos, visited, path)
+        print(path)
         return path, visited
+
+    def _DFS(self, obstacles, goal_pos, cur_pos, visited, path):
+        if cur_pos == goal_pos:
+            path.append(goal_pos)
+            return True
+
+        visited.append(cur_pos)
+        # 不断寻找neighbour，调用_DFS
+        # neigh -> ((2, 2), 1)
+
+        # 按照
+        neighs = list(self.neighbours_of(obstacles, cur_pos))
+
+        def key(elem):
+            return -elem[1]
+        neighs.sort(key=key)
+
+        for neigh in neighs:
+            # 这个点没有被访问过，而且不是障碍
+            if neigh[0] not in visited and neigh[0] not in obstacles and \
+                    self._DFS(obstacles, goal_pos, neigh[0], visited, path):
+                # 只有这条路能走通的时候才能进入这里
+                path.append(cur_pos)
+                return True
+            # else:
+            #     return False
+
+        return False
 
     def BFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
-        queue = Queue()
-        queue.put(start_pos)
-        while queue.not_empty:
-            cur_pos = queue.get()
-            if cur_pos in visited:
-                continue
-            if cur_pos == goal_pos:
-                pass
-
-            visited.append(cur_pos)
-            for neigh in self.neighbours_of(obstacles, cur_pos):
-                if neigh[0] not in visited:
-                    queue.put(neigh)
 
         return path, visited
 
@@ -103,6 +100,14 @@ class ProblemSolvingAgent:
         path, visited = [], []
 
         return path, visited
+
+    def get_size(self, obstacles):
+        width = -1
+        height = -1
+        for x, y in obstacles:
+            width = max(x, width)
+            height = max(y, height)
+        return width, height
 
     def neighbours_of(self, obstacles, node):
         """_summary_

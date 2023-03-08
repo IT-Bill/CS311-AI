@@ -35,7 +35,7 @@ class Plotting:
             except OSError as e:
                 print(f"Error:{ e.strerror}")
 
-    def generate_gif(self, algs, fps=20):
+    def generate_gif(self, algs, fps=200):
         pic_lst = sorted(os.listdir(self.image_path),
                          key=lambda x: int(x[:-4]))
         # print(pic_lst)
