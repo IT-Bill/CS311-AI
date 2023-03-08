@@ -1,1 +1,3 @@
 venv/*
+lab03/images/*
+*/__pycache__/*

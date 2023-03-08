@@ -11,6 +11,9 @@ from utils.logger import logger
 import heapq
 from utils.timer import time_controller
 
+from queue import LifoQueue as Stack
+
+
 class ProblemSolvingAgent:
     """
     Problem Solving Agent is a kind of goal-based agent who
@@ -18,11 +21,13 @@ class ProblemSolvingAgent:
     Problem Solving Agent is to find a sequence of actions that
     will lead to the goal state from the initial state.
     """
-    
-    # DepthFirstSearch, BreadthFirstSearch, UniformCostSearch(Dijkstra), Greedy BestFirstSearch, Astar  
+
+    # DepthFirstSearch, BreadthFirstSearch, UniformCostSearch(Dijkstra), Greedy BestFirstSearch, Astar
     supported_algorithms = ['DFS', 'BFS', 'UCS', 'GBFS', 'Astar']
-    algorithm_indexes = {name: i for i, name in enumerate(supported_algorithms)}    
-    def solve_by_searching(self, obstacles, start_pos, goal_pos, algorithm='DFS'):        
+    algorithm_indexes = {name: i for i,
+                         name in enumerate(supported_algorithms)}
+
+    def solve_by_searching(self, obstacles, start_pos, goal_pos, algorithm='DFS'):
         """Let the agent solve problem by searching path on the graph. 
         Args:
             obstacles (list of bi-tuples): 
@@ -44,25 +49,65 @@ class ProblemSolvingAgent:
         logger.info(f'The agent starts using {algorithm} for searching. ')
         time_controller.start_to_time()
         index = ProblemSolvingAgent.algorithm_indexes[algorithm]
-        path, visited = [self.DFS, self.BFS, self.UCS][index](obstacles, start_pos, goal_pos)
+        path, visited = [self.DFS, self.BFS, self.UCS][index](
+            obstacles, start_pos, goal_pos)
         logger.info(f'The agent successfully searched a path! ')
-        logger.info(f'Agent finishes after {time_controller.get_time_used()}s of computing. ')    
+        logger.info(
+            f'Agent finishes after {time_controller.get_time_used()}s of computing. ')
         return path, visited
-    
+
     def DFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
-        
+
+        self._DFS(obstacles, goal_pos, start_pos, visited, path)
+        print(path)
         return path, visited
+
+    def _DFS(self, obstacles, goal_pos, cur_pos, visited, path):
+        if cur_pos == goal_pos:
+            return True
+
+        visited.append(cur_pos)
+        # 不断寻找neighbour，调用_DFS
+        # neigh -> ((2, 2), 1)
+
+        # 按照
+        neighs = list(self.neighbours_of(obstacles, cur_pos))
+
+        def key(elem):
+            return -elem[1]
+        neighs.sort(key=key)
+
+        for neigh in neighs:
+            # 这个点没有被访问过，而且不是障碍
+            if neigh[0] not in visited and neigh[0] not in obstacles and \
+                    self._DFS(obstacles, goal_pos, neigh[0], visited, path):
+                # 只有这条路能走通的时候才能进入这里
+                path.append(neigh[0])
+                return True
+            # else:
+            #     return False
+
+        return False
+
     def BFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
-        
+
         return path, visited
-    
+
     def UCS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
-        
+
         return path, visited
-        
+
+    def get_size(self, obstacles):
+        width = -1
+        height = -1
+        for x, y in obstacles:
+            width = max(x, width)
+            height = max(y, height)
+        return width, height
+
     def neighbours_of(self, obstacles, node):
         """_summary_
 
@@ -74,10 +119,9 @@ class ProblemSolvingAgent:
             moving_cost(float): the cost the agent has to pay to move from node to neighbour. 
         """
         directions = [[1, 0, 1], [0, 1, 1], [-1, 0, 1], [0, -1, 1],
-                [-1, -1, math.sqrt(2)], [-1, 1, math.sqrt(2)], [1, -1, math.sqrt(2)], [1, 1, math.sqrt(2)] ]
-        return filter(lambda nm: nm[0] not in obstacles 
-            , map(lambda d:((node[0]+d[0], node[1]+d[1]), d[2]), directions))
-        
+                      [-1, -1, math.sqrt(2)], [-1, 1, math.sqrt(2)], [1, -1, math.sqrt(2)], [1, 1, math.sqrt(2)]]
+        return filter(lambda nm: nm[0] not in obstacles, map(lambda d: ((node[0]+d[0], node[1]+d[1]), d[2]), directions))
+
     def euclidean_distance(self, node1, node2, coefficient=1):
         """The Euclidean distance between two nodes.
         Args:
@@ -87,7 +131,8 @@ class ProblemSolvingAgent:
         Returns:
             d: the distance value. 
         """
-        return coefficient*sqrt(sum( (x - y)**2 for x, y in zip(node1, node2)))
+        return coefficient*sqrt(sum((x - y)**2 for x, y in zip(node1, node2)))
+
     def parents2path(self, parents, last_node, start_pos):
         """The function generates the path found by searching algorithm. 
         Args:
@@ -107,6 +152,6 @@ class ProblemSolvingAgent:
                 break
         path.reverse()
         return path
-    
+
     def inner_product(self, a, b):
         return sum(x * y for x, y in zip(a, b))

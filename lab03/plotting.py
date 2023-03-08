@@ -14,17 +14,19 @@ import glob
 # sys.path.append(os.path.dirname(os.path.abspath(__file__)) +
 #                 "/../../Search_based_Planning/")
 
+
 class Plotting:
     def __init__(self, xI, xG, obs, xy_reso=1, save_fig=False, image_path=None, gif_path=None, sampling_period=15):
-        resolve = lambda x: (x[0] / xy_reso, x[1]/xy_reso)
-        self.xI, self.xG = resolve(xI), resolve(xG) # 起点坐标元组和终点坐标元组
+        def resolve(x): return (x[0] / xy_reso, x[1]/xy_reso)
+        self.xI, self.xG = resolve(xI), resolve(xG)  # 起点坐标元组和终点坐标元组
         self.obs = obs   # 障碍物坐标元组列表
         self.fig_num = 0
-        self.save_fig=save_fig
-        self.image_path=image_path
-        self.gif_path=gif_path
+        self.save_fig = save_fig
+        self.image_path = image_path
+        self.gif_path = gif_path
         self.sampling_period = sampling_period
         # self.image_buffer = [] # 先画完再gif
+
     def clear_image_path(self):
         png_files = glob.glob(str(self.image_path/'*.png'))
         for png_file in png_files:
@@ -32,8 +34,10 @@ class Plotting:
                 os.remove(png_file)
             except OSError as e:
                 print(f"Error:{ e.strerror}")
-    def generate_gif(self, algs, fps=25):
-        pic_lst = sorted(os.listdir(self.image_path), key=lambda x: int(x[:-4]))
+
+    def generate_gif(self, algs, fps=20):
+        pic_lst = sorted(os.listdir(self.image_path),
+                         key=lambda x: int(x[:-4]))
         # print(pic_lst)
         gif_images = []
         for name in pic_lst:
@@ -41,7 +45,7 @@ class Plotting:
                 filename = os.path.join(self.image_path, name)
                 gif_images.append(imageio.imread(filename))  # 读取图片
         imageio.mimsave(self.gif_path/f'{algs}.gif', gif_images, fps=fps)
-        
+
     def update_obs(self, obs):
         self.obs = obs
 
@@ -117,12 +121,12 @@ class Plotting:
                 length = 40
             #
             # length = 15
-            if count%self.sampling_period==0 and self.save_fig:
+            if count % self.sampling_period == 0 and self.save_fig:
                 plt.savefig(self.image_path/f'{self.fig_num}.png')
-                self.fig_num+=1
+                self.fig_num += 1
             if count % length == 0:
                 plt.pause(0.001)
-                
+
         plt.pause(0.01)
 
     def plot_path(self, path, cl='r', flag=False):
@@ -133,12 +137,12 @@ class Plotting:
             plt.plot(path_x, path_y, linewidth='3', color='r')
         else:
             plt.plot(path_x, path_y, linewidth='3', color=cl)
-        
+
         plt.plot(self.xI[0], self.xI[1], "bs")
         plt.plot(self.xG[0], self.xG[1], "gs")
         if self.save_fig:
             plt.savefig(self.image_path/f'{self.fig_num}.png')
-            self.fig_num+=1
+            self.fig_num += 1
         plt.pause(0.01)
 
     def plot_visited_bi(self, v_fore, v_back):
@@ -152,9 +156,11 @@ class Plotting:
 
         for k in range(max(len_fore, len_back)):
             if k < len_fore:
-                plt.plot(v_fore[k][0], v_fore[k][1], linewidth='3', color='gray', marker='o')
+                plt.plot(v_fore[k][0], v_fore[k][1],
+                         linewidth='3', color='gray', marker='o')
             if k < len_back:
-                plt.plot(v_back[k][0], v_back[k][1], linewidth='3', color='cornflowerblue', marker='o')
+                plt.plot(v_back[k][0], v_back[k][1], linewidth='3',
+                         color='cornflowerblue', marker='o')
 
             plt.gcf().canvas.mpl_connect('key_release_event',
                                          lambda event: [exit(0) if event.key == 'escape' else None])
