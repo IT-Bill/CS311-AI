@@ -83,7 +83,7 @@ class ProblemSolvingAgent:
             if neigh[0] not in visited and neigh[0] not in obstacles and \
                     self._DFS(obstacles, goal_pos, neigh[0], visited, path):
                 # 只有这条路能走通的时候才能进入这里
-                path.append(neigh[0])
+                path.append(cur_pos)
                 return True
             # else:
             #     return False
