@@ -59,28 +59,37 @@ class ProblemSolvingAgent:
     def DFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
 
-        stack = Stack()
-        stack.put(start_pos)
-        while stack.not_empty:
-            cur_pos = stack.get()
-            visited.append(cur_pos)
-
-            if cur_pos == goal_pos:
-                path.append(goal_pos)
-
-                while stack.not_empty:
-                    path.append(stack.get())
-
-                break
-            
-            for neigh in self.neighbours_of(obstacles, cur_pos):
-                if neigh[0] not in (visited + obstacles):
-                    stack.put(neigh[0])
-        
-
+        self._DFS(obstacles, goal_pos, start_pos, visited, path)
+        print(path)
         return path, visited
 
-    
+    def _DFS(self, obstacles, goal_pos, cur_pos, visited, path):
+        if cur_pos == goal_pos:
+            path.append(goal_pos)
+            return True
+
+        visited.append(cur_pos)
+        # 不断寻找neighbour，调用_DFS
+        # neigh -> ((2, 2), 1)
+
+        # 按照
+        neighs = list(self.neighbours_of(obstacles, cur_pos))
+
+        def key(elem):
+            return -elem[1]
+        neighs.sort(key=key)
+
+        for neigh in neighs:
+            # 这个点没有被访问过，而且不是障碍
+            if neigh[0] not in visited and neigh[0] not in obstacles and \
+                    self._DFS(obstacles, goal_pos, neigh[0], visited, path):
+                # 只有这条路能走通的时候才能进入这里
+                path.append(cur_pos)
+                return True
+            # else:
+            #     return False
+
+        return False
 
     def BFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
