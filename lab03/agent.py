@@ -13,6 +13,8 @@ from utils.timer import time_controller
 
 from queue import LifoQueue as Stack
 from queue import Queue
+from queue import PriorityQueue as Heap
+import heapq
 
 
 class ProblemSolvingAgent:
@@ -60,6 +62,9 @@ class ProblemSolvingAgent:
     def DFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
         parents = {}
+        
+        half_visit = [start_pos]
+
         stack = Stack()
         stack.put(start_pos)
         while stack.not_empty:
@@ -74,33 +79,71 @@ class ProblemSolvingAgent:
                 path = self.parents2path(parents, goal_pos, start_pos)
                 break
 
-            for neigh in self.neighbours_of(obstacles, cur_pos):
-                if neigh[0] not in visited:
-                    stack.put(neigh[0])
-                    parents[neigh[0]] = cur_pos
+            for neigh, cost in self.neighbours_of(obstacles, cur_pos):
+                if neigh not in half_visit:
+                    stack.put(neigh)
+                    half_visit.append(neigh)
+                    parents[neigh] = cur_pos
 
         return path, visited
 
     def BFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
+        parents = {}
+        half_visit = [start_pos]
         queue = Queue()
+
         queue.put(start_pos)
         while queue.not_empty:
             cur_pos = queue.get()
             if cur_pos in visited:
                 continue
             if cur_pos == goal_pos:
-                pass
+                path = self.parents2path(parents, goal_pos, start_pos)
+                break
 
             visited.append(cur_pos)
-            for neigh in self.neighbours_of(obstacles, cur_pos):
-                if neigh[0] not in visited:
+            for neigh, cost in self.neighbours_of(obstacles, cur_pos):
+                if neigh not in half_visit:
                     queue.put(neigh)
+                    half_visit.append(neigh)
+                    parents[neigh] = cur_pos
 
         return path, visited
 
     def UCS(self, obstacles, start_pos, goal_pos):
+        class Pos:
+            def __init__(self, pos, cost):
+                self.pos = pos 
+                self.cost = cost 
+            def __lt__(self, other):
+                return self.cost <= other.cost
+            @property
+            def get(self):
+                return self.pos, self.cost
+        
+
         path, visited = [], []
+        parents = {}
+        half_visit = [start_pos]
+        heap = [Pos(start_pos, 0)]
+        while len(heap) != 0:
+            cur_pos, cur_cost = heapq.heappop(heap).get
+            if cur_pos in visited:
+                continue
+            if cur_pos == goal_pos:
+                path = self.parents2path(parents, goal_pos, start_pos)
+                break
+
+            visited.append(cur_pos)
+            for neigh, cost in self.neighbours_of(obstacles, cur_pos):
+                if neigh not in half_visit:
+                    # push
+                    heapq.heappush(heap, Pos(neigh, cur_cost + cost))
+                    half_visit.append(neigh)
+                    parents[neigh] = cur_pos
+                # elif Pos(neigh, cost) in heap:
+                    
 
         return path, visited
 

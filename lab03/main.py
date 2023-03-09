@@ -1,10 +1,13 @@
 from pathlib import Path
+import matplotlib
+# matplotlib.use("agg")
 from matplotlib import pyplot as plt
 import tomli #the lib to read config file
 import sys
 from agent import ProblemSolvingAgent
 import plotting
 from utils.map import mat2obs, read_map
+
 
 file_folder = Path(__file__).parent # file is more accurate then cwd
 test_folder = file_folder/'test_cases'
@@ -16,7 +19,8 @@ sys.path.append(str(file_folder)) # add the current directory to the path.
 # agent algorithm
 agent = ProblemSolvingAgent() # The agent implementation, you should complete the agent.py
 
-case = '1'
+
+case = str(4)
 # environment world
 with open(test_folder/f'case{case}.toml', 'rb') as f:
     config = tomli.load(f)
@@ -28,13 +32,13 @@ start_point = tuple(world_config['start_point'])
 goal_point  = tuple(world_config['goal_point'])
 # DepthFirstSearch, BreadthFirstSearch, UniformCostSearch(Dijkstra), Greedy BestFirstSearch, Astar
 algorithms = ['DFS', 'BFS', 'UCS', 'GBFS', 'Astar']
-algorithm = 'DFS'
-path, visited = agent.solve_by_searching(obstacles, start_point, goal_point, algorithm)
-plot = plotting.Plotting(start_point, goal_point, obstacles, 
-                        save_fig=save_fig, image_path=image_path, gif_path=gif_path,
-                        sampling_period = world_config['sampling_period'])
-if save_fig:
-    plot.clear_image_path()
-plot.animation(path, visited, algorithm)
-# plot.generate_gif(algorithm+case, fps=world_config['fps'])
-plot.generate_gif(algorithm+case)
+for algorithm in algorithms[:3]:
+    path, visited = agent.solve_by_searching(obstacles, start_point, goal_point, algorithm)
+    plot = plotting.Plotting(start_point, goal_point, obstacles, 
+                            save_fig=save_fig, image_path=image_path, gif_path=gif_path,
+                            sampling_period = world_config['sampling_period'])
+    if save_fig:
+        plot.clear_image_path()
+    plot.animation(path, visited, algorithm)
+    # plot.generate_gif(algorithm+case, fps=world_config['fps'])
+    plot.generate_gif(algorithm+case)

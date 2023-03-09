@@ -35,7 +35,7 @@ class Plotting:
             except OSError as e:
                 print(f"Error:{ e.strerror}")
 
-    def generate_gif(self, algs, fps=200):
+    def generate_gif(self, algs, fps=30):
         pic_lst = sorted(os.listdir(self.image_path),
                          key=lambda x: int(x[:-4]))
         # print(pic_lst)
@@ -44,7 +44,7 @@ class Plotting:
             if name.endswith('png'):
                 filename = os.path.join(self.image_path, name)
                 gif_images.append(imageio.imread(filename))  # 读取图片
-        imageio.mimsave(self.gif_path/f'{algs}.gif', gif_images, fps=fps)
+        imageio.mimsave(self.gif_path/f'{algs}.gif', gif_images, duration=0.1)
 
     def update_obs(self, obs):
         self.obs = obs
