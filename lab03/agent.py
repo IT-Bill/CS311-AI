@@ -17,6 +17,8 @@ from queue import PriorityQueue as Heap
 import heapq
 
 
+
+
 class ProblemSolvingAgent:
     """
     Problem Solving Agent is a kind of goal-based agent who
@@ -52,7 +54,7 @@ class ProblemSolvingAgent:
         logger.info(f'The agent starts using {algorithm} for searching. ')
         time_controller.start_to_time()
         index = ProblemSolvingAgent.algorithm_indexes[algorithm]
-        path, visited = [self.DFS, self.BFS, self.UCS][index](
+        path, visited = [self.DFS, self.BFS, self.UCS, self.GBFS, self.Astar][index](
             obstacles, start_pos, goal_pos)
         logger.info(f'The agent successfully searched a path! ')
         logger.info(
@@ -121,7 +123,6 @@ class ProblemSolvingAgent:
             @property
             def get(self):
                 return self.pos, self.cost
-        
 
         path, visited = [], []
         parents = {}
@@ -143,9 +144,75 @@ class ProblemSolvingAgent:
                     half_visit.append(neigh)
                     parents[neigh] = cur_pos
                 # elif Pos(neigh, cost) in heap:
-                    
-
         return path, visited
+    
+    def GBFS(self, obstacles, start_pos, goal_pos):
+        class Pos:
+            def __init__(self, pos, cost):
+                self.pos = pos 
+                self.cost = cost 
+            def __lt__(self, other):
+                return self.cost <= other.cost
+            @property
+            def get(self):
+                return self.pos, self.cost
+
+        path, visited = [], []
+        parents = {}
+        half_visit = [start_pos]
+        heap = [Pos(start_pos, self.euclidean_distance(start_pos, goal_pos))]
+        while len(heap) != 0:
+            cur_pos, cur_cost = heapq.heappop(heap).get
+            if cur_pos in visited:
+                continue
+            if cur_pos == goal_pos:
+                path = self.parents2path(parents, goal_pos, start_pos)
+                break
+
+            visited.append(cur_pos)
+            for neigh, cost in self.neighbours_of(obstacles, cur_pos):
+                if neigh not in half_visit:
+                    # push
+                    heapq.heappush(heap, Pos(neigh, self.euclidean_distance(neigh, goal_pos)))
+                    half_visit.append(neigh)
+                    parents[neigh] = cur_pos
+                # elif Pos(neigh, cost) in heap:
+        return path, visited
+    
+    def Astar(self, obstacles, start_pos, goal_pos):
+        class Pos:
+            def __init__(self, pos, cost, h):
+                self.pos = pos 
+                self.cost = cost 
+                self.h = h
+            def __lt__(self, other):
+                return self.cost + self.h <= other.cost + other.h
+            @property
+            def get(self):
+                return self.pos, self.cost, self.h
+
+        path, visited = [], []
+        parents = {}
+        half_visit = [start_pos]
+        heap = [Pos(start_pos, 0, self.euclidean_distance(start_pos, goal_pos))]
+        while len(heap) != 0:
+            cur_pos, cur_cost, cur_h = heapq.heappop(heap).get
+            if cur_pos in visited:
+                continue
+            if cur_pos == goal_pos:
+                path = self.parents2path(parents, goal_pos, start_pos)
+                break
+
+            visited.append(cur_pos)
+            for neigh, cost in self.neighbours_of(obstacles, cur_pos):
+                if neigh not in half_visit:
+                    # push
+                    heapq.heappush(heap, Pos(neigh, cur_cost + cost, self.euclidean_distance(neigh, goal_pos)))
+                    half_visit.append(neigh)
+                    parents[neigh] = cur_pos
+                # elif Pos(neigh, cost) in heap:
+        return path, visited
+    
 
     def neighbours_of(self, obstacles, node):
         """_summary_

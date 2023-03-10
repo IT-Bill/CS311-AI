@@ -1,7 +1,7 @@
 from pathlib import Path
 import matplotlib
-# matplotlib.use("agg")
 from matplotlib import pyplot as plt
+matplotlib.use("TkAgg")
 import tomli #the lib to read config file
 import sys
 from agent import ProblemSolvingAgent
@@ -20,7 +20,7 @@ sys.path.append(str(file_folder)) # add the current directory to the path.
 agent = ProblemSolvingAgent() # The agent implementation, you should complete the agent.py
 
 
-case = str(4)
+case = str(2)
 # environment world
 with open(test_folder/f'case{case}.toml', 'rb') as f:
     config = tomli.load(f)
@@ -32,13 +32,15 @@ start_point = tuple(world_config['start_point'])
 goal_point  = tuple(world_config['goal_point'])
 # DepthFirstSearch, BreadthFirstSearch, UniformCostSearch(Dijkstra), Greedy BestFirstSearch, Astar
 algorithms = ['DFS', 'BFS', 'UCS', 'GBFS', 'Astar']
-for algorithm in algorithms[:3]:
-    path, visited = agent.solve_by_searching(obstacles, start_point, goal_point, algorithm)
-    plot = plotting.Plotting(start_point, goal_point, obstacles, 
-                            save_fig=save_fig, image_path=image_path, gif_path=gif_path,
-                            sampling_period = world_config['sampling_period'])
-    if save_fig:
-        plot.clear_image_path()
-    plot.animation(path, visited, algorithm)
-    # plot.generate_gif(algorithm+case, fps=world_config['fps'])
-    plot.generate_gif(algorithm+case)
+# for algorithm in algorithms:
+# for algorithm in algorithms:
+algorithm = 'Astar'
+path, visited = agent.solve_by_searching(obstacles, start_point, goal_point, algorithm)
+plot = plotting.Plotting(start_point, goal_point, obstacles, 
+                        save_fig=save_fig, image_path=image_path, gif_path=gif_path,
+                        sampling_period = world_config['sampling_period'])
+if save_fig:
+    plot.clear_image_path()
+plot.animation(path, visited, algorithm)
+# plot.generate_gif(algorithm+case, fps=world_config['fps'])
+plot.generate_gif(algorithm+case)

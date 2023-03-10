@@ -55,6 +55,7 @@ class ProblemSolvingAgent:
         return path, visited
     def Astar(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
+        return path, visited
         
     def DFS(self, obstacles, start_pos, goal_pos):
         path, visited = [], []
