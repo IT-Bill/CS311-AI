@@ -1,7 +1,9 @@
+import numpy as np
+
 class BoardController:
     def __init__(self, board, cur_color):
         # numpy array
-        self.board = board
+        self.board = np.copy(board)
         # 当前执棋色
         self.cur_color = cur_color
         self.legal_pos = []
@@ -9,12 +11,12 @@ class BoardController:
         self.dir = ((-1, 0), (-1, 1), (0, 1), (1, 1),
                     (1, 0), (1, -1), (0, -1), (-1, -1))
         
-    
-    def on_board(x, y):
+     
+    def on_board(self, x, y):
         """判断某位置是否在棋盘上"""
         return 0 <= x <= 7 and 0 <= y <= 7
     
-    def is_legal_place(self, cheak_only, i, j):
+    def is_legal_pos(self, cheak_only, i, j):
         self.rev_pos.clear()
 
         # 当前位置为空，且在棋盘上,可能是落子点，可以搜索
@@ -50,17 +52,23 @@ class BoardController:
         return len(self.rev_pos) > 0
     
     def get_all_legal_pos(self):
-        has_legal_pos = False
+        """直接返回合法的列表，不再返回True or False"""
+        # has_legal_pos = False
         self.legal_pos.clear()
 
         for i in range(8):
             for j in range(8):
-                if self.is_legal_place(True, i, j):
+                if self.is_legal_pos(True, i, j):
                     self.legal_pos.append((i, j))
-                    has_legal_pos = True 
+                    # has_legal_pos = True 
         
-        return has_legal_pos
+        return self.legal_pos
 
 
-
+    def board_after_rev(self, x, y):
+        """落子方法，调用后修改原棋盘，落子位置一定要合法"""
+        if (self.is_legal_pos(False, x, y)):
+            # TODO 可以加速
+            for pos in self.rev_pos:
+                self.board[x, y] = self.cur_color
 

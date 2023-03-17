@@ -1,6 +1,8 @@
 import numpy as np
 import random
 import time
+from board_controller import BoardController
+from greedy import greedy
 
 COLOR_BLACK = -1
 COLOR_WHITH = 1
@@ -8,23 +10,16 @@ COLOR_NONE = 0
 random.seed(0)
 
 
-class AI:
-    """don't change the class name"""
-
+class AI(object):
     def __init__(self, chessboard_size, color, time_out):
-        """chessboard_size, color, time_out passed from age"""
         self.chessboard_size = chessboard_size
-        # You are white or black
         self.color = color
-        # the max time you should use, your algorithm's run time must not exceed the time limit
         self.time_out = time_out
-        # You need to add your decision to your candidate_list. The system will get the end of your candidate_list as you decision
         self.candidate_list = []
 
     def go(self, chessboard):
-        """The input is the current chessboard. Chessboard is a numpy array"""
-        # Clear candidate_list, must do this st
         self.candidate_list.clear()
-        # ===================================
-        
-        # ============================
+        board_controller = BoardController(chessboard, self.color)
+        self.candidate_list += board_controller.get_all_legal_pos()
+        if len(self.candidate_list) != 0: # 有合法的位置
+            self.candidate_list.append(greedy(board_controller))
