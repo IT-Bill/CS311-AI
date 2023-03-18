@@ -79,7 +79,7 @@ class Board:
         liberties = []
 
         # 检查相邻点的气数
-        for neighbor in point.neighbors():
+        for neighbor in point.neighbors:
             if not self.is_on_grad(neighbor):
                 continue
             neighbor_string = self._grid.get(neighbor)
@@ -97,7 +97,7 @@ class Board:
 
         # 合并同色相邻的棋链
         for same_color_string in adjacent_same_color:
-            new_string.merged_with(same_color_string)
+            new_string = new_string.merged_with(same_color_string)
 
         # 设置stone对应的棋链为键值对
         for new_string_point in new_string.stones:
@@ -114,9 +114,9 @@ class Board:
 
     def _remove_string(self, string: GoString):
         for point in string.stones:
-            for neighbor in point.neighbors():
+            for neighbor in point.neighbors:
                 neighbor_string = self.get_go_string(neighbor)
-                if neighbor is None:
+                if neighbor_string is None:
                     continue
 
                 # 为己方相邻棋链增加气数
@@ -188,9 +188,29 @@ class GameState:
         return (self.next_player, self.board)
     
     def is_move_violate_ko(self, player, move):
+        """判断是否违反劫争规则，此方法很慢"""
         if not move.is_play:
             return False
         next_board = copy.deepcopy(self.board)
         next_board.place_stones(player, move.point)
         next_situation = (player.other, next_board)
         past_state = self.previous_state
+        while past_state is not None:
+            if past_state.situation == next_situation:
+                return True
+            past_state = past_state.previous_state
+        return False
+    
+    def is_valid_move(self, move):
+        if self.is_over():
+            return False
+        
+        if move.is_pass or move.is_resign:
+            return True
+        
+        return (
+            self.board.get(move.point) is None and
+            not self.is_move_self_capture(self.next_player, move) and
+            not self.is_move_violate_ko(self.next_player, move)
+        )
+

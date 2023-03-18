@@ -14,6 +14,8 @@ class Player(enum.Enum):
 
 class Point(namedtuple("Point", "row col")):
     """命名元组，可以使用Point.row而不是Point[0]"""
+
+    @property
     def neighbors(self):
         return [
             Point(self.row - 1, self.col),
@@ -21,4 +23,12 @@ class Point(namedtuple("Point", "row col")):
             Point(self.row, self.col - 1),
             Point(self.row, self.col + 1),
         ]
-        
+    
+    @property
+    def corners(self):
+        return [
+            Point(self.row - 1, self.col - 1),
+            Point(self.row - 1, self.col + 1),
+            Point(self.row + 1, self.col - 1),
+            Point(self.row + 1, self.col + 1),
+        ]
