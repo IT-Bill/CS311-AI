@@ -113,12 +113,20 @@ class Board:
 
         # 减少对方相邻棋链的气
         for opposite_color_string in adjacent_opposite_color:
-            opposite_color_string.without_liberty(point)
+            replacement = opposite_color_string.without_liberty(point)
+            if replacement.num_liberties > 0:
+                self._replace_string(replacement)
+            else:
+                self._remove_string(opposite_color_string)
         
         # 提走
         for opposite_color_string in adjacent_opposite_color:
             if opposite_color_string.num_liberties == 0:
                 self._remove_string(opposite_color_string)
+
+    def _replace_string(self, new_string):
+        for point in new_string.stones:
+            self._grid[point] = new_string
 
     def _remove_string(self, string: GoString):
         for point in string.stones:

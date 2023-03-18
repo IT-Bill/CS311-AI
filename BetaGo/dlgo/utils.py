@@ -1,4 +1,4 @@
-from dlgo import gotypes, goboard_slow
+from dlgo import gotypes, goboard
 
 
 COLS = "ABCDEFGHJKLMNOPQRST"
@@ -19,7 +19,7 @@ def print_move(player, move):
     print("%s %s" % (player, move_str))
 
 
-def print_board(board: goboard_slow.Board):
+def print_board(board: goboard.Board):
     for row in range(board.num_rows, 0, -1):
         bump = " " if row <= 9 else ""
         line = []
