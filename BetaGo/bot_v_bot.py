@@ -5,7 +5,7 @@ import time
 
 def main():
     
-    board_size = 4
+    board_size = 5
     game = goboard.GameState.new_game(board_size)
     bots = {
         gotypes.Player.black: naive.RandomBot(),

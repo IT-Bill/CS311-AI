@@ -137,7 +137,7 @@ class Board:
 
                 # 为己方相邻棋链增加气数
                 if neighbor_string is not string:
-                    neighbor_string.with_liberty(point)
+                    self._replace_string(neighbor_string.with_liberty(point))
             self._grid[point] = None
 
             # 应用哈希值提子
@@ -164,18 +164,18 @@ class Board:
 
 
 class GameState:
-    def __init__(self, board, next_player, previous_state, last_move):
+    def __init__(self, board, next_player, prev_state, last_move):
         self.board: Board = board
         self.next_player: Player = next_player
 
         # 应用zobrist_hash
-        self.previous_state: GameState = previous_state
-        if self.previous_state is None:
-            self.previous_states = frozenset()
+        self.prev_state: GameState = prev_state
+        if self.prev_state is None:
+            self.prev_states = frozenset()
         else:
-            self.previous_states = frozenset(
-                previous_state.previous_states |
-                {(previous_state.next_player, previous_state.board.zobrist_hash)}
+            self.prev_states = frozenset(
+                prev_state.prev_states |
+                {(prev_state.next_player, prev_state.board.zobrist_hash)}
             )
 
         self.last_move: Move = last_move
@@ -202,7 +202,7 @@ class GameState:
             return False
         if self.last_move.is_resign:
             return True
-        second_last_move = self.previous_state.last_move
+        second_last_move = self.prev_state.last_move
         if second_last_move is None:
             return False
         return self.last_move.is_pass and second_last_move.is_pass
@@ -227,7 +227,7 @@ class GameState:
         next_board = copy.deepcopy(self.board)
         next_board.place_stones(player, move.point)
         next_situation = (player.other, next_board.zobrist_hash)
-        return next_situation in self.previous_states
+        return next_situation in self.prev_states
     
     def is_valid_move(self, move):
         if self.is_over():
@@ -242,3 +242,5 @@ class GameState:
             not self.is_move_violate_ko(self.next_player, move)
         )
 
+    
+    def legal_moves

@@ -32,3 +32,4 @@ class Point(namedtuple("Point", "row col")):
             Point(self.row + 1, self.col - 1),
             Point(self.row + 1, self.col + 1),
         ]
+    
