@@ -1,13 +1,13 @@
 from dlgo import goboard, gotypes
-from dlgo.agent import naive
+from dlgo.mcts.mcts import MCTSAgent as Bot
 from dlgo.utils import print_board, print_move, point_from_coords
 import time
 
 def main():
     
-    board_size = 4
+    board_size = 5
     game = goboard.GameState.new_game(board_size)
-    bot = naive.RandomBot()
+    bot = Bot()
     while not game.is_over():
         time.sleep(0.4)
 

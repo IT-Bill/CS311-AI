@@ -2,6 +2,7 @@ from dlgo.gotypes import Player, Point
 from typing import Optional, Union, Any, Set, List, Tuple
 from dlgo import zobrist
 import copy
+from dlgo.scoring import compute_game_result
 
 class Move:
     """设置棋手能够采取的一种动作"""
@@ -66,6 +67,7 @@ class GoString:
             self.stones == other.stones and \
             self.liberties == other.liberties
 
+    
 
 class Board:
     """棋盘类"""
@@ -77,7 +79,7 @@ class Board:
         self._hash = zobrist.EMPTY_BOARD
 
     def place_stones(self, player: Player, point: Point):
-        assert self.is_on_grad(point)
+        assert self.is_on_grid(point)
         assert self._grid.get(point) is None  # 这个位置是空的才能落子
         adjacent_same_color: List[GoString] = []
         adjacent_opposite_color: List[GoString] = []
@@ -85,7 +87,7 @@ class Board:
 
         # 检查相邻点的气数
         for neighbor in point.neighbors:
-            if not self.is_on_grad(neighbor):
+            if not self.is_on_grid(neighbor):
                 continue
             neighbor_string = self._grid.get(neighbor)
 
@@ -143,7 +145,7 @@ class Board:
             # 应用哈希值提子
             self._hash ^= zobrist.HASH_CODE[point, string.color]
 
-    def is_on_grad(self, point):
+    def is_on_grid(self, point):
         return 1 <= point.row <= self.num_rows and \
             1 <= point.col <= self.num_cols
 
@@ -161,6 +163,20 @@ class Board:
     @property
     def zobrist_hash(self):
         return self._hash
+    
+    def __eq__(self, other):
+        return isinstance(other, Board) and \
+            self.num_rows == other.num_rows and \
+            self.num_cols == other.num_cols and \
+            self._hash() == other._hash()
+    
+    def __deepcopy__(self, memodict={}):
+        copied = Board(self.num_rows, self.num_cols)
+        # Can do a shallow copy b/c the dictionary maps tuples
+        # (immutable) to GoStrings (also immutable)
+        copied._grid = copy.copy(self._grid)
+        copied._hash = self._hash
+        return copied
 
 
 class GameState:
@@ -243,4 +259,24 @@ class GameState:
         )
 
     
-    def legal_moves
+    def legal_moves(self):
+        moves = []
+        for row in range(1, self.board.num_rows + 1):
+            for col in range(1, self.board.num_cols + 1):
+                move = Move.play(Point(row, col))
+                if self.is_valid_move(move):
+                    moves.append(move)
+        # These two moves are always legal.
+        moves.append(Move.pass_turn())
+        moves.append(Move.resign())
+
+        return moves
+
+    # TODO 复制粘贴来的
+    def winner(self):
+        if not self.is_over():
+            return None
+        if self.last_move.is_resign:
+            return self.next_player
+        game_result = compute_game_result(self)
+        return game_result.winner

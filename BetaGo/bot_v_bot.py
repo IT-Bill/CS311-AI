@@ -1,5 +1,6 @@
 from dlgo import goboard, gotypes
 from dlgo.agent import naive
+from dlgo.mcts.mcts import MCTSAgent
 from dlgo.utils import print_board, print_move
 import time
 
@@ -9,7 +10,7 @@ def main():
     game = goboard.GameState.new_game(board_size)
     bots = {
         gotypes.Player.black: naive.RandomBot(),
-        gotypes.Player.white: naive.RandomBot(),
+        gotypes.Player.white: MCTSAgent(),
     }
     while not game.is_over():
         time.sleep(0.4)
