@@ -1,7 +1,5 @@
-from dlgo.gotypes import Point
-from dlgo.goboard import Board
 
-def is_point_an_eye(board: Board, point: Point, color):
+def is_point_an_eye(board, point, color):
     if board.get(point) is not None:
         return False
     for neighbor in point.neighbors:

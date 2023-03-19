@@ -5,7 +5,9 @@ from dlgo.agent.naive import RandomBot
 import random
 from typing import List
 import math
+from dlgo.scoring import compute_game_result
 
+__all__ = ["MCTSAgent"]
 
 class MCTSNode:
     def __init__(self, game_state, parent=None, prev_move=None):
@@ -41,12 +43,12 @@ class MCTSNode:
     def is_terminal(self):
         return self.game_state.is_over()
 
-    def winner_frac(self, player):
+    def winning_frac(self, player):
         return float(self.win_counts[player]) / float(self.num_rollouts)
 
 
 class MCTSAgent(Agent):
-    def __init__(self, num_rounds=10):
+    def __init__(self, num_rounds=1000):
         self.num_rounds = num_rounds
 
     def select_move(self, game_state: GameState):
@@ -71,16 +73,26 @@ class MCTSAgent(Agent):
                 node.record_win(winner)
                 node = node.parent
 
+        scored_moves = [
+            (child.winning_frac(game_state.next_player), 
+             child.prev_move, child.num_rollouts)
+            for child in root.children
+        ]
+        scored_moves.sort(key=lambda x: x[0], reverse=True)
+        for s, m, n in scored_moves[:10]:
+            print('%s - %.3f (%d)' % (m, s, n))
+
         # 完成所有推演后，选择下一步动作
         best_move = None
         best_pct = -1.0
 
         for child in root.children:
-            child_pct = child.winner_frac(game_state.next_player)
+            child_pct = child.winning_frac(game_state.next_player)
+            # print(child.prev_move, "胜率", child_pct)
             if child_pct > best_pct:
                 best_pct = child_pct
                 best_move = child.prev_move
-
+        print('Select move %s with win pct %.3f' % (best_move, best_pct))
         return best_move
 
     def select_child(self, node: MCTSNode):
@@ -90,9 +102,9 @@ class MCTSAgent(Agent):
             score = self.uct_score(
                 node.num_rollouts, 
                 child.num_rollouts, 
-                child.winner_frac(node.game_state.next_player))
+                child.winning_frac(node.game_state.next_player))
             if score > best_score:
-                score = best_score
+                best_score = score
                 best_child = child
         return best_child
     
@@ -108,6 +120,6 @@ class MCTSAgent(Agent):
         return game_state.winner()
 
     @staticmethod
-    def uct_score(parent_rollouts, child_rollouts, win_pct, temperature=1.5):
+    def uct_score(parent_rollouts, child_rollouts, win_pct, temperature=5):
         exporation = math.sqrt(math.log(parent_rollouts) / child_rollouts)
         return win_pct + temperature * exporation

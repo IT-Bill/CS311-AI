@@ -3,6 +3,9 @@ from typing import Optional, Union, Any, Set, List, Tuple
 from dlgo import zobrist
 import copy
 from dlgo.scoring import compute_game_result
+from dlgo.utils import COLS
+
+__all__ = ["Move", "GoString", "GameState", "Board"]
 
 class Move:
     """设置棋手能够采取的一种动作"""
@@ -26,6 +29,16 @@ class Move:
     @classmethod
     def resign(cls):
         return Move(is_resign=True)
+    
+    def __str__(self) -> str:
+        if self.is_pass:
+            move_str = "passes"
+        elif self.is_resign:
+            move_str = "resigns"
+        else:
+            move_str = '%s%d' % (COLS[self.point.col - 1], self.point.row)
+        return move_str
+
 
 
 class GoString:

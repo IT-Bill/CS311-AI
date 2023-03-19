@@ -1,6 +1,8 @@
 import enum
 from collections import namedtuple
 
+__all__ = ["Player", "Point"]
+
 class Player(enum.Enum):
     """棋子颜色类"""
     black = 1
