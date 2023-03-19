@@ -7,6 +7,7 @@ from dlgo.utils import COLS
 
 __all__ = ["Move", "GoString", "GameState", "Board"]
 
+
 class Move:
     """设置棋手能够采取的一种动作"""
 
@@ -29,7 +30,7 @@ class Move:
     @classmethod
     def resign(cls):
         return Move(is_resign=True)
-    
+
     def __str__(self) -> str:
         if self.is_pass:
             move_str = "passes"
@@ -38,7 +39,6 @@ class Move:
         else:
             move_str = '%s%d' % (COLS[self.point.col - 1], self.point.row)
         return move_str
-
 
 
 class GoString:
@@ -53,7 +53,7 @@ class GoString:
     def without_liberty(self, point):
         new_liberties = self.liberties - set([point])
         return GoString(self.color, self.stones, new_liberties)
-    
+
     def with_liberty(self, point):
         new_liberties = self.liberties | set([point])
         return GoString(self.color, self.stones, new_liberties)
@@ -80,7 +80,6 @@ class GoString:
             self.stones == other.stones and \
             self.liberties == other.liberties
 
-    
 
 class Board:
     """棋盘类"""
@@ -133,7 +132,7 @@ class Board:
                 self._replace_string(replacement)
             else:
                 self._remove_string(opposite_color_string)
-        
+
         # 提走
         for opposite_color_string in adjacent_opposite_color:
             if opposite_color_string.num_liberties == 0:
@@ -172,17 +171,17 @@ class Board:
     def get_go_string(self, point) -> GoString:
         """返回某个点所在的棋链"""
         return self._grid.get(point)
-    
+
     @property
     def zobrist_hash(self):
         return self._hash
-    
+
     def __eq__(self, other):
         return isinstance(other, Board) and \
             self.num_rows == other.num_rows and \
             self.num_cols == other.num_cols and \
             self._hash() == other._hash()
-    
+
     def __deepcopy__(self, memodict={}):
         copied = Board(self.num_rows, self.num_cols)
         # Can do a shallow copy b/c the dictionary maps tuples
@@ -217,16 +216,16 @@ class GameState:
         else:
             next_board = self.board
         return GameState(next_board, self.next_player.other, self, move)
-    
+
     @classmethod
     def new_game(cls, board_size):
         if isinstance(board_size, int):
             board_size = (board_size, board_size)
         board = Board(*board_size)
         return GameState(board, Player.black, None, None)
-    
+
     def is_over(self):
-        # 两个None都是防止开局的时候判断错误 
+        # 两个None都是防止开局的时候判断错误
         if self.last_move is None:
             return False
         if self.last_move.is_resign:
@@ -235,7 +234,7 @@ class GameState:
         if second_last_move is None:
             return False
         return self.last_move.is_pass and second_last_move.is_pass
-    
+
     def is_move_self_capture(self, player, move) -> bool:
         """判断是否是自吃"""
         if not move.is_play:
@@ -244,34 +243,33 @@ class GameState:
         next_board.place_stones(player, move.point)
         new_string = next_board.get_go_string(move.point)
         return new_string.num_liberties == 0
-    
+
     @property
     def situation(self):
         return (self.next_player, self.board)
-    
+
     def is_move_violate_ko(self, player, move):
-        """判断是否违反劫争规则，此方法很慢"""
+        """判断是否违反劫争规则"""
         if not move.is_play:
             return False
         next_board = copy.deepcopy(self.board)
         next_board.place_stones(player, move.point)
         next_situation = (player.other, next_board.zobrist_hash)
         return next_situation in self.prev_states
-    
+
     def is_valid_move(self, move):
         if self.is_over():
             return False
-        
+
         if move.is_pass or move.is_resign:
             return True
-        
+
         return (
             self.board.get(move.point) is None and
             not self.is_move_self_capture(self.next_player, move) and
             not self.is_move_violate_ko(self.next_player, move)
         )
 
-    
     def legal_moves(self):
         moves = []
         for row in range(1, self.board.num_rows + 1):

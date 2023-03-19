@@ -1,21 +1,16 @@
-from dlgo.gotypes import Player
-from dlgo.goboard import GameState
-from dlgo.agent.naive import RandomBot
-from dlgo.mcts.mcts import MCTSAgent
-from dlgo.utils import print_board, print_move
+from gotypes import Player
+from game import GameState
+from agent import RandomAgent
+from mcts import MCTSAgent
+from utils import print_board, print_move
 import time, sys, os
 
-dir = os.path.abspath(os.path.dirname(__file__))
-f = open(dir + "\\mcts_v_mcts.txt", "a")
-f.truncate(0)
-sys.stdout = f
 
 def main():
     
-    board_size = 9
-    game = GameState.new_game(board_size)
+    game = GameState.new_game()
     bots = {
-        Player.black: MCTSAgent(),
+        Player.black: RandomAgent(),
         Player.white: MCTSAgent(),
     }
     while not game.is_over():
@@ -26,10 +21,9 @@ def main():
         game = game.apply_move(bot_move)
         print_board(game.board)
         print("-------------------------")
-        f.flush()
+        # f.flush()
     
     print("Winner", game.winner())
 
 if __name__ == '__main__':
     main()
-    f.close()

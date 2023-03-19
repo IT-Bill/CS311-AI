@@ -1,11 +1,8 @@
-from dlgo.gotypes import Player
-from dlgo.goboard import GameState
-from dlgo.agent.base import Agent
-from dlgo.agent.naive import RandomBot
-import random
 from typing import List
-import math
-from dlgo.scoring import compute_game_result
+from gotypes import Player
+from game import GameState
+import random, math
+from agent import Agent, RandomAgent
 
 __all__ = ["MCTSAgent"]
 
@@ -34,8 +31,9 @@ class MCTSNode:
         return new_node
     
     def record_win(self, winner):
-        self.win_counts[winner] += 1
         self.num_rollouts += 1
+        if winner is not None:
+            self.win_counts[winner] += 1
 
     def can_add_child(self):
         return len(self.unvisited_moves) > 0
@@ -45,13 +43,13 @@ class MCTSNode:
 
     def winning_frac(self, player):
         return float(self.win_counts[player]) / float(self.num_rollouts)
-
+    
 
 class MCTSAgent(Agent):
-    def __init__(self, num_rounds=1000):
+    def __init__(self, num_rounds=20):
         self.num_rounds = num_rounds
 
-    def select_move(self, game_state: GameState):
+    def select_move(self, game_state):
         root = MCTSNode(game_state)
 
         for _ in range(self.num_rounds):
@@ -79,7 +77,7 @@ class MCTSAgent(Agent):
             for child in root.children
         ]
         scored_moves.sort(key=lambda x: x[0], reverse=True)
-        for s, m, n in scored_moves[:10]:
+        for s, m, n in scored_moves[:]:
             print('%s - %.3f (%d)' % (m, s, n))
 
         # 完成所有推演后，选择下一步动作
@@ -94,7 +92,7 @@ class MCTSAgent(Agent):
                 best_move = child.prev_move
         print('Select move %s with win pct %.3f' % (best_move, best_pct))
         return best_move
-
+    
     def select_child(self, node: MCTSNode):
         best_score = -1
         best_child = None
@@ -111,8 +109,8 @@ class MCTSAgent(Agent):
     @staticmethod
     def simulate_random_game(game_state: GameState):
         bots = {
-            Player.black: RandomBot(),
-            Player.white: RandomBot()
+            Player.black: RandomAgent(),
+            Player.white: RandomAgent()
         }
         while not game_state.is_over():
             move = bots[game_state.next_player].select_move(game_state)
