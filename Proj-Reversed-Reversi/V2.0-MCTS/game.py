@@ -37,6 +37,7 @@ class Board:
         self.board_size = board_size
         self.grid = np.copy(grid)   # nparray
         self._hash = zobrist.INIT_BOARD
+        self.num_grid = board_size * board_size
 
     def place_stones(self, player, point, reverse):
         # ! 这里debug了很久，对numpy不熟。。
@@ -90,8 +91,14 @@ class GameState:
     def is_over(self):
         # 计算棋盘上是否还有0即可
         # ! 上面的说法是错误的！！！
-
-        return (self.board.grid == 0).sum() == 0
+        # 有时棋盘上还有空格，但是两方都没法下
+        if self.last_move is None:
+            return False
+        second_last_move = self.prev_state.last_move
+        if second_last_move is None:
+            return False
+        return self.last_move.is_pass and second_last_move.is_pass
+        # return (self.board.grid == 0).sum() == 0
     
     
     def is_valid_move(self, move: Move) -> bool:
@@ -185,7 +192,10 @@ class GameState:
                 move = Move.play(Point(row, col))
                 if self.is_valid_move(move): # 仅仅做检查，不获取翻转列表
                     moves.append(move)
-
+        if len(moves) == 0:
+            # ! 如果没有地方可以下，就pass！！
+            moves.append(Move.pass_turn())
+            
         return moves
 
     def winner(self):
@@ -193,7 +203,6 @@ class GameState:
             return None
         num_black = (self.board.grid == Player.black.value).sum()
         num_white = (self.board.grid == Player.white.value).sum()
-        print(num_black, num_white)
         if num_black < num_white:
             return Player.black
         elif num_white < num_black:
@@ -201,5 +210,12 @@ class GameState:
         else:
             # ! 平局
             return None
-        
+    
+    @property
+    def num_empty(self):
+        return (self.board.grid == 0).sum()
+    
+    @property
+    def num_stones(self):
+        return self.board.num_grid - self.num_empty
     

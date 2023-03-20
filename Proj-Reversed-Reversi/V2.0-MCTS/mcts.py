@@ -1,6 +1,6 @@
 from typing import List
 from gotypes import Player
-from game import GameState
+from game import GameState, Move
 import random, math
 from agent import Agent, RandomAgent
 
@@ -46,11 +46,15 @@ class MCTSNode:
     
 
 class MCTSAgent(Agent):
-    def __init__(self, num_rounds=20):
+    def __init__(self, auto_set_param=True, num_rounds=400, temperature=5):
         self.num_rounds = num_rounds
+        self.temperature = temperature
+        self.auto_set_param = auto_set_param
 
     def select_move(self, game_state):
         root = MCTSNode(game_state)
+        if self.auto_set_param:
+            self.set_param(root)
 
         for _ in range(self.num_rounds):
             node = root
@@ -58,6 +62,7 @@ class MCTSAgent(Agent):
             # 一直找到有孩子的node
             while (not node.can_add_child()) and (not node.is_terminal()):
                 node = self.select_child(node)
+
 
             # 将新的子节点添加到子树中
             if node.can_add_child():
@@ -80,6 +85,8 @@ class MCTSAgent(Agent):
         for s, m, n in scored_moves[:]:
             print('%s - %.3f (%d)' % (m, s, n))
 
+        
+
         # 完成所有推演后，选择下一步动作
         best_move = None
         best_pct = -1.0
@@ -91,6 +98,10 @@ class MCTSAgent(Agent):
                 best_pct = child_pct
                 best_move = child.prev_move
         print('Select move %s with win pct %.3f' % (best_move, best_pct))
+
+        print("Rounds: ", self.num_rounds)
+        print("Temperature: ", self.temperature)
+
         return best_move
     
     def select_child(self, node: MCTSNode):
@@ -106,6 +117,29 @@ class MCTSAgent(Agent):
                 best_child = child
         return best_child
     
+    def set_param(self, node: MCTSNode):
+        """设置参数"""
+        empty = node.game_state.num_empty
+        
+        if empty < 10:
+            r = 200
+        elif empty < 20:
+            r = 120
+            t = 7
+        elif empty < 35:
+            r = 80
+            t = 5
+        elif empty < 50:
+            r = 60
+            t = 4
+        else:
+            r = 60
+            t = 3
+
+        self.num_rounds = len(node.unvisited_moves) * r
+        # self.temperature = t
+
+    
     @staticmethod
     def simulate_random_game(game_state: GameState):
         bots = {
@@ -117,7 +151,6 @@ class MCTSAgent(Agent):
             game_state = game_state.apply_move(move)
         return game_state.winner()
 
-    @staticmethod
-    def uct_score(parent_rollouts, child_rollouts, win_pct, temperature=5):
+    def uct_score(self, parent_rollouts, child_rollouts, win_pct):
         exporation = math.sqrt(math.log(parent_rollouts) / child_rollouts)
-        return win_pct + temperature * exporation
+        return win_pct + self.temperature * exporation

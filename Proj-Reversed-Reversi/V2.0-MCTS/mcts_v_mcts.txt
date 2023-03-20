@@ -1,0 +1,1408 @@
+F4 - 0.557 (106)
+E5 - 0.529 (102)
+D2 - 0.510 (98)
+C3 - 0.479 (94)
+Select move F4 with win pct 0.557
+Rounds:  400
+Temperature:  5
+Time:  4.455696299992269
+Player.black( x ) F4
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  .  .  .  .  .  .  . 
+ D  .  .  .  o  x  .  .  . 
+ E  .  .  .  x  x  .  .  . 
+ F  .  .  .  .  x  .  .  . 
+ G  .  .  .  .  .  .  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+D5 - 0.453 (64)
+F3 - 0.417 (60)
+F5 - 0.357 (56)
+Select move D5 with win pct 0.453
+Rounds:  180
+Temperature:  5
+Time:  1.8833890999958385
+Player.white( o ) D5
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  .  .  .  .  .  .  . 
+ D  .  .  .  o  o  o  .  . 
+ E  .  .  .  x  x  .  .  . 
+ F  .  .  .  .  x  .  .  . 
+ G  .  .  .  .  .  .  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C3 - 0.571 (91)
+C2 - 0.512 (84)
+C6 - 0.512 (84)
+C4 - 0.432 (74)
+C5 - 0.358 (67)
+Select move C3 with win pct 0.571
+Rounds:  400
+Temperature:  5
+Time:  3.9542766000085976
+Player.black( x ) C3
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  .  .  x  .  .  .  . 
+ D  .  .  .  x  o  o  .  . 
+ E  .  .  .  x  x  .  .  . 
+ F  .  .  .  .  x  .  .  . 
+ G  .  .  .  .  .  .  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+D2 - 0.471 (68)
+F3 - 0.446 (65)
+G4 - 0.429 (63)
+B2 - 0.321 (56)
+F2 - 0.188 (48)
+Select move D2 with win pct 0.471
+Rounds:  300
+Temperature:  5
+Time:  3.0025528999976814
+Player.white( o ) D2
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  .  .  x  .  .  .  . 
+ D  .  .  o  o  o  o  .  . 
+ E  .  .  .  x  x  .  .  . 
+ F  .  .  .  .  x  .  .  . 
+ G  .  .  .  .  .  .  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C1 - 0.541 (61)
+C6 - 0.525 (59)
+C5 - 0.525 (59)
+E5 - 0.500 (58)
+C4 - 0.491 (57)
+C2 - 0.444 (54)
+E1 - 0.404 (52)
+Select move C1 with win pct 0.541
+Rounds:  400
+Temperature:  5
+Time:  3.6769532000180334
+Player.black( x ) C1
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  x  x  .  .  . 
+ F  .  .  .  .  x  .  .  . 
+ G  .  .  .  .  .  .  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G4 - 0.536 (69)
+B3 - 0.529 (68)
+F5 - 0.443 (61)
+D1 - 0.407 (59)
+F3 - 0.397 (58)
+B2 - 0.352 (54)
+F2 - 0.294 (51)
+Select move G4 with win pct 0.536
+Rounds:  420
+Temperature:  5
+Time:  4.1417228000063915
+Player.white( o ) G4
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  x  o  .  .  . 
+ F  .  .  .  .  o  .  .  . 
+ G  .  .  .  .  o  .  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G5 - 0.514 (107)
+D6 - 0.500 (106)
+E5 - 0.442 (95)
+C5 - 0.413 (92)
+Select move G5 with win pct 0.514
+Rounds:  400
+Temperature:  5
+Time:  3.443085599981714
+Player.black( x ) G5
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  x  o  .  .  . 
+ F  .  .  .  .  x  .  .  . 
+ G  .  .  .  .  o  x  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F2 - 0.516 (64)
+F3 - 0.492 (63)
+D1 - 0.475 (61)
+G6 - 0.467 (60)
+B2 - 0.431 (58)
+E2 - 0.431 (58)
+B3 - 0.411 (56)
+Select move F2 with win pct 0.516
+Rounds:  420
+Temperature:  5
+Time:  3.7550150999741163
+Player.white( o ) F2
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  o  x  .  . 
+ H  .  .  .  .  .  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H4 - 0.521 (71)
+D6 - 0.507 (69)
+F3 - 0.507 (69)
+C4 - 0.478 (67)
+E5 - 0.478 (67)
+G3 - 0.351 (57)
+Select move H4 with win pct 0.521
+Rounds:  400
+Temperature:  5
+Time:  3.5124435999896377
+Player.black( x ) H4
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  .  .  .  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B2 - 0.576 (66)
+B0 - 0.540 (63)
+D1 - 0.517 (60)
+H6 - 0.492 (59)
+B3 - 0.404 (52)
+Select move B2 with win pct 0.576
+Rounds:  300
+Temperature:  5
+Time:  3.0606954999966547
+Player.white( o ) B2
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  o  .  .  .  .  . 
+ C  .  x  .  o  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B4 - 0.523 (107)
+C4 - 0.500 (102)
+D6 - 0.469 (98)
+A3 - 0.441 (93)
+Select move B4 with win pct 0.523
+Rounds:  400
+Temperature:  5
+Time:  3.607376200001454
+Player.black( x ) B4
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  o  .  x  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B3 - 0.544 (68)
+B0 - 0.484 (62)
+H6 - 0.476 (63)
+D0 - 0.414 (58)
+D1 - 0.286 (49)
+Select move B3 with win pct 0.544
+Rounds:  300
+Temperature:  5
+Time:  2.4694556000176817
+Player.white( o ) B3
+ A  .  .  .  .  .  .  .  . 
+ B  .  .  o  o  x  .  .  . 
+ C  .  x  .  o  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A3 - 0.462 (104)
+D6 - 0.451 (102)
+B1 - 0.440 (100)
+C4 - 0.404 (94)
+Select move A3 with win pct 0.462
+Rounds:  400
+Temperature:  5
+Time:  3.2203431999951135
+Player.black( x ) A3
+ A  .  .  .  x  .  .  .  . 
+ B  .  .  x  o  x  .  .  . 
+ C  .  x  .  o  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A1 - 0.623 (69)
+H6 - 0.562 (64)
+D1 - 0.556 (63)
+A5 - 0.548 (62)
+E1 - 0.508 (59)
+B0 - 0.508 (59)
+B5 - 0.464 (56)
+B1 - 0.333 (48)
+Select move A1 with win pct 0.623
+Rounds:  480
+Temperature:  5
+Time:  3.665656700002728
+Player.white( o ) A1
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  o  x  .  .  . 
+ C  .  x  .  o  .  .  .  . 
+ D  .  .  x  o  o  o  .  . 
+ E  .  .  .  o  o  .  .  . 
+ F  .  .  o  .  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F3 - 0.505 (107)
+D6 - 0.465 (99)
+B1 - 0.454 (97)
+C4 - 0.443 (97)
+Select move F3 with win pct 0.505
+Rounds:  400
+Temperature:  5
+Time:  3.0900666999805253
+Player.black( x ) F3
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  x  x  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  x  o  o  .  . 
+ E  .  .  .  x  o  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  .  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G2 - 0.657 (67)
+C2 - 0.631 (65)
+D1 - 0.597 (62)
+F5 - 0.597 (62)
+B5 - 0.491 (55)
+E2 - 0.491 (55)
+D0 - 0.481 (54)
+Select move G2 with win pct 0.657
+Rounds:  420
+Temperature:  5
+Time:  3.248584099987056
+Player.white( o ) G2
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  x  x  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  x  o  o  .  . 
+ E  .  .  .  x  o  .  .  . 
+ F  .  .  o  o  x  .  .  . 
+ G  .  .  o  .  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G3 - 0.545 (44)
+C4 - 0.512 (41)
+E5 - 0.512 (41)
+B1 - 0.512 (41)
+F5 - 0.488 (41)
+D6 - 0.475 (40)
+G1 - 0.462 (39)
+C5 - 0.462 (39)
+E2 - 0.405 (37)
+F1 - 0.378 (37)
+Select move G3 with win pct 0.545
+Rounds:  400
+Temperature:  5
+Time:  2.8545504999929108
+Player.black( x ) G3
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  x  x  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  x  o  o  .  . 
+ E  .  .  .  x  o  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  o  x  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+E2 - 0.612 (67)
+C2 - 0.565 (62)
+B5 - 0.565 (62)
+G6 - 0.565 (62)
+D1 - 0.533 (60)
+D0 - 0.455 (55)
+F5 - 0.423 (52)
+Select move E2 with win pct 0.612
+Rounds:  420
+Temperature:  5
+Time:  2.877446400001645
+Player.white( o ) E2
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  x  x  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  x  o  o  .  . 
+ E  .  .  o  o  o  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  o  x  x  x  .  . 
+ H  .  .  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H1 - 0.514 (37)
+G1 - 0.486 (37)
+C4 - 0.457 (35)
+C6 - 0.412 (34)
+F5 - 0.412 (34)
+F1 - 0.394 (33)
+E5 - 0.364 (33)
+D6 - 0.364 (33)
+H2 - 0.364 (33)
+B1 - 0.323 (31)
+D1 - 0.300 (30)
+E1 - 0.300 (30)
+Select move H1 with win pct 0.514
+Rounds:  400
+Temperature:  5
+Time:  2.5844077999936417
+Player.black( x ) H1
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  x  x  .  .  . 
+ C  .  x  .  x  .  .  .  . 
+ D  .  .  x  x  o  o  .  . 
+ E  .  .  o  o  o  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C2 - 0.600 (65)
+H3 - 0.585 (65)
+B0 - 0.578 (64)
+B5 - 0.578 (64)
+H6 - 0.556 (63)
+C4 - 0.533 (60)
+F5 - 0.533 (60)
+D1 - 0.533 (60)
+H2 - 0.444 (54)
+D0 - 0.444 (54)
+H5 - 0.373 (51)
+Select move C2 with win pct 0.600
+Rounds:  660
+Temperature:  5
+Time:  4.200846599997021
+Player.white( o ) C2
+ A  .  o  .  x  .  .  .  . 
+ B  .  .  o  x  x  .  .  . 
+ C  .  x  o  x  .  .  .  . 
+ D  .  .  o  o  o  o  .  . 
+ E  .  .  o  o  o  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B1 - 0.509 (55)
+E5 - 0.500 (54)
+C6 - 0.481 (52)
+A2 - 0.462 (52)
+F1 - 0.429 (49)
+E1 - 0.370 (46)
+C4 - 0.370 (46)
+D1 - 0.348 (46)
+Select move B1 with win pct 0.509
+Rounds:  400
+Temperature:  5
+Time:  2.4712953999987803
+Player.black( x ) B1
+ A  .  o  .  x  .  .  .  . 
+ B  .  x  x  x  x  .  .  . 
+ C  .  x  o  x  .  .  .  . 
+ D  .  .  o  o  o  o  .  . 
+ E  .  .  o  o  o  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  .  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H6 - 0.485 (66)
+A2 - 0.477 (65)
+A4 - 0.469 (64)
+H5 - 0.469 (64)
+H3 - 0.452 (62)
+F5 - 0.452 (62)
+B0 - 0.452 (62)
+C4 - 0.435 (62)
+C0 - 0.417 (60)
+D1 - 0.357 (56)
+H2 - 0.357 (56)
+A5 - 0.315 (54)
+A0 - 0.191 (47)
+Select move H6 with win pct 0.485
+Rounds:  780
+Temperature:  5
+Time:  4.731473799998639
+Player.white( o ) H6
+ A  .  o  .  x  .  .  .  . 
+ B  .  x  x  x  x  .  .  . 
+ C  .  x  o  x  .  .  .  . 
+ D  .  .  o  o  o  o  .  . 
+ E  .  .  o  o  o  .  .  . 
+ F  .  .  o  x  o  .  .  . 
+ G  .  .  x  x  x  o  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C4 - 0.592 (49)
+F6 - 0.583 (48)
+D1 - 0.533 (45)
+C6 - 0.511 (45)
+G6 - 0.511 (45)
+E1 - 0.488 (43)
+F1 - 0.452 (42)
+E5 - 0.452 (42)
+F5 - 0.439 (41)
+Select move C4 with win pct 0.592
+Rounds:  400
+Temperature:  5
+Time:  2.5368500000040513
+Player.black( x ) C4
+ A  .  o  .  x  .  .  .  . 
+ B  .  x  x  x  x  .  .  . 
+ C  .  x  o  x  x  .  .  . 
+ D  .  .  o  o  x  o  .  . 
+ E  .  .  o  o  x  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  x  x  x  o  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+D1 - 0.632 (68)
+H5 - 0.612 (67)
+A2 - 0.585 (65)
+A5 - 0.571 (63)
+C5 - 0.548 (62)
+G1 - 0.541 (61)
+H3 - 0.541 (61)
+A4 - 0.541 (61)
+B0 - 0.508 (59)
+F5 - 0.500 (58)
+C0 - 0.500 (58)
+B5 - 0.483 (58)
+H2 - 0.474 (57)
+E5 - 0.426 (54)
+A0 - 0.333 (48)
+Select move D1 with win pct 0.632
+Rounds:  900
+Temperature:  5
+Time:  5.580220999981975
+Player.white( o ) D1
+ A  .  o  .  x  .  .  .  . 
+ B  .  o  x  x  x  .  .  . 
+ C  .  o  o  x  x  .  .  . 
+ D  .  o  o  o  x  o  .  . 
+ E  .  .  o  o  x  .  .  . 
+ F  .  .  o  x  x  .  .  . 
+ G  .  .  x  x  x  o  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F6 - 0.471 (34)
+B0 - 0.471 (34)
+E0 - 0.471 (34)
+A0 - 0.438 (32)
+G6 - 0.387 (31)
+G1 - 0.387 (31)
+F1 - 0.387 (31)
+E6 - 0.355 (31)
+E1 - 0.355 (31)
+C0 - 0.310 (29)
+D0 - 0.286 (28)
+D6 - 0.222 (27)
+C6 - 0.222 (27)
+Select move F6 with win pct 0.471
+Rounds:  400
+Temperature:  5
+Time:  2.1973571999988053
+Player.black( x ) F6
+ A  .  o  .  x  .  .  .  . 
+ B  .  o  x  x  x  .  .  . 
+ C  .  o  o  x  x  .  .  . 
+ D  .  o  o  o  x  o  .  . 
+ E  .  .  o  o  x  .  .  . 
+ F  .  .  o  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+E5 - 0.652 (66)
+H5 - 0.625 (64)
+H3 - 0.619 (63)
+A4 - 0.609 (64)
+F5 - 0.590 (61)
+A2 - 0.590 (61)
+A5 - 0.559 (59)
+C5 - 0.552 (58)
+B5 - 0.481 (54)
+H2 - 0.420 (50)
+Select move E5 with win pct 0.652
+Rounds:  600
+Temperature:  5
+Time:  3.145547099993564
+Player.white( o ) E5
+ A  .  o  .  x  .  .  .  . 
+ B  .  o  o  x  x  .  .  . 
+ C  .  o  o  o  x  .  .  . 
+ D  .  o  o  o  o  o  .  . 
+ E  .  .  o  o  o  o  .  . 
+ F  .  .  o  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+E1 - 0.553 (47)
+B0 - 0.500 (44)
+D0 - 0.465 (43)
+D6 - 0.429 (42)
+E6 - 0.385 (39)
+E0 - 0.342 (38)
+C0 - 0.324 (37)
+A2 - 0.324 (37)
+F1 - 0.324 (37)
+C6 - 0.278 (36)
+Select move E1 with win pct 0.553
+Rounds:  400
+Temperature:  5
+Time:  2.238819499994861
+Player.black( x ) E1
+ A  .  o  .  x  .  .  .  . 
+ B  .  o  o  x  x  .  .  . 
+ C  .  o  o  x  x  .  .  . 
+ D  .  o  x  o  o  o  .  . 
+ E  .  x  o  o  o  o  .  . 
+ F  .  .  x  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A2 - 0.632 (87)
+F1 - 0.616 (86)
+B5 - 0.612 (85)
+E0 - 0.585 (82)
+C5 - 0.575 (80)
+G7 - 0.575 (80)
+H5 - 0.575 (80)
+H3 - 0.551 (78)
+A4 - 0.545 (77)
+H2 - 0.514 (74)
+G1 - 0.479 (71)
+Select move A2 with win pct 0.632
+Rounds:  880
+Temperature:  5
+Time:  4.413450699998066
+Player.white( o ) A2
+ A  .  o  o  x  .  .  .  . 
+ B  .  o  o  o  x  .  .  . 
+ C  .  o  o  x  o  .  .  . 
+ D  .  o  x  o  o  o  .  . 
+ E  .  x  o  o  o  o  .  . 
+ F  .  .  x  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C0 - 0.491 (57)
+B0 - 0.444 (54)
+D6 - 0.426 (54)
+A0 - 0.360 (50)
+C5 - 0.347 (49)
+C6 - 0.319 (47)
+E6 - 0.304 (46)
+D0 - 0.233 (43)
+Select move C0 with win pct 0.491
+Rounds:  400
+Temperature:  5
+Time:  2.000490300008096
+Player.black( x ) C0
+ A  .  o  o  x  .  .  .  . 
+ B  .  o  o  o  x  .  .  . 
+ C  x  x  x  x  o  .  .  . 
+ D  .  x  x  o  o  o  .  . 
+ E  .  x  x  o  o  o  .  . 
+ F  .  .  x  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B0 - 0.765 (98)
+G7 - 0.671 (85)
+D0 - 0.671 (85)
+G1 - 0.625 (80)
+A4 - 0.625 (80)
+H3 - 0.613 (80)
+E0 - 0.597 (77)
+B5 - 0.562 (73)
+F1 - 0.562 (73)
+H2 - 0.507 (69)
+Select move B0 with win pct 0.765
+Rounds:  800
+Temperature:  5
+Time:  3.894068800000241
+Player.white( o ) B0
+ A  .  o  o  x  .  .  .  . 
+ B  o  o  o  o  x  .  .  . 
+ C  x  o  x  x  o  .  .  . 
+ D  .  x  o  o  o  o  .  . 
+ E  .  x  x  o  o  o  .  . 
+ F  .  .  x  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A4 - 0.306 (49)
+F5 - 0.271 (48)
+E6 - 0.255 (47)
+C5 - 0.239 (46)
+B5 - 0.222 (45)
+D6 - 0.205 (44)
+C6 - 0.163 (43)
+D0 - 0.100 (40)
+A0 - 0.053 (38)
+Select move A4 with win pct 0.306
+Rounds:  400
+Temperature:  5
+Time:  1.8894478000001982
+Player.black( x ) A4
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  x  o  x  x  o  .  .  . 
+ D  .  x  o  o  o  o  .  . 
+ E  .  x  x  o  o  o  .  . 
+ F  .  .  x  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+E0 - 0.844 (90)
+B5 - 0.820 (89)
+G1 - 0.802 (86)
+F1 - 0.800 (85)
+A5 - 0.800 (85)
+H3 - 0.744 (78)
+F0 - 0.724 (76)
+H2 - 0.662 (71)
+G7 - 0.657 (70)
+D0 - 0.657 (70)
+Select move E0 with win pct 0.844
+Rounds:  800
+Temperature:  5
+Time:  3.5644323999877088
+Player.white( o ) E0
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  x  o  x  x  o  .  .  . 
+ D  .  x  o  o  o  o  .  . 
+ E  o  o  o  o  o  o  .  . 
+ F  .  .  x  x  x  .  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F5 - 0.217 (46)
+D6 - 0.217 (46)
+F1 - 0.217 (46)
+F0 - 0.196 (46)
+A0 - 0.159 (44)
+D0 - 0.159 (44)
+C5 - 0.140 (43)
+C6 - 0.140 (43)
+E6 - 0.119 (42)
+Select move F5 with win pct 0.217
+Rounds:  400
+Temperature:  5
+Time:  1.7612527000019327
+Player.black( x ) F5
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  x  o  x  x  o  .  .  . 
+ D  .  x  o  x  o  o  .  . 
+ E  o  o  o  o  x  o  .  . 
+ F  .  .  x  x  x  x  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+D0 - 0.798 (89)
+H5 - 0.787 (89)
+H3 - 0.782 (87)
+G1 - 0.728 (81)
+G7 - 0.705 (78)
+H2 - 0.705 (78)
+G6 - 0.680 (75)
+A5 - 0.658 (73)
+B5 - 0.629 (70)
+Select move D0 with win pct 0.798
+Rounds:  720
+Temperature:  5
+Time:  3.1085932000132743
+Player.white( o ) D0
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  .  . 
+ D  o  o  o  x  o  o  .  . 
+ E  o  o  o  o  x  o  .  . 
+ F  .  .  x  x  x  x  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F0 - 0.286 (56)
+E6 - 0.273 (55)
+C5 - 0.259 (54)
+B5 - 0.231 (52)
+C6 - 0.167 (48)
+D6 - 0.167 (48)
+F1 - 0.111 (45)
+A0 - 0.048 (42)
+Select move F0 with win pct 0.286
+Rounds:  400
+Temperature:  5
+Time:  1.636737200024072
+Player.black( x ) F0
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  .  . 
+ D  o  o  x  x  o  o  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  x  x  x  x  x  . 
+ G  .  .  x  x  x  x  .  . 
+ H  .  x  .  .  x  .  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H5 - 0.791 (91)
+G1 - 0.787 (89)
+H3 - 0.735 (83)
+A5 - 0.716 (81)
+G7 - 0.704 (81)
+G0 - 0.692 (78)
+F1 - 0.671 (76)
+H2 - 0.658 (76)
+B5 - 0.649 (74)
+G6 - 0.620 (71)
+Select move H5 with win pct 0.791
+Rounds:  800
+Temperature:  5
+Time:  3.160594300017692
+Player.white( o ) H5
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  .  . 
+ D  o  o  x  x  o  o  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  x  o  x  o  x  . 
+ G  .  .  x  x  o  o  .  . 
+ H  .  x  .  .  x  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G6 - 0.456 (57)
+C5 - 0.298 (47)
+C6 - 0.283 (46)
+F1 - 0.250 (44)
+E6 - 0.227 (44)
+D6 - 0.190 (42)
+A0 - 0.190 (42)
+H7 - 0.150 (40)
+B5 - 0.105 (38)
+Select move G6 with win pct 0.456
+Rounds:  400
+Temperature:  5
+Time:  1.560800199978985
+Player.black( x ) G6
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  .  . 
+ D  o  o  x  x  o  o  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  x  o  x  x  x  . 
+ G  .  .  x  x  x  x  x  . 
+ H  .  x  .  .  x  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H2 - 0.705 (88)
+A5 - 0.701 (87)
+G1 - 0.698 (86)
+F1 - 0.698 (86)
+E6 - 0.679 (84)
+B5 - 0.659 (82)
+H3 - 0.637 (80)
+F7 - 0.615 (78)
+G7 - 0.605 (76)
+G0 - 0.600 (75)
+H7 - 0.379 (58)
+Select move H2 with win pct 0.705
+Rounds:  880
+Temperature:  5
+Time:  3.2265471999999136
+Player.white( o ) H2
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  .  . 
+ D  o  o  x  x  o  o  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  o  o  o  x  x  . 
+ G  .  .  o  o  x  x  x  . 
+ H  .  x  o  .  x  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C6 - 0.468 (47)
+D6 - 0.409 (44)
+F1 - 0.395 (43)
+E6 - 0.366 (41)
+H3 - 0.366 (41)
+B5 - 0.325 (40)
+G1 - 0.308 (39)
+C5 - 0.289 (38)
+A0 - 0.176 (34)
+H7 - 0.121 (33)
+Select move C6 with win pct 0.468
+Rounds:  400
+Temperature:  5
+Time:  1.5377345999877434
+Player.black( x ) C6
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  x  . 
+ D  o  o  x  x  o  x  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  o  o  o  x  x  . 
+ G  .  .  o  o  x  x  x  . 
+ H  .  x  o  .  x  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H3 - 0.747 (95)
+G7 - 0.728 (92)
+E6 - 0.671 (85)
+A5 - 0.671 (85)
+D6 - 0.671 (85)
+C5 - 0.659 (85)
+B7 - 0.646 (82)
+F1 - 0.620 (79)
+F7 - 0.603 (78)
+H0 - 0.548 (73)
+B5 - 0.542 (72)
+G0 - 0.535 (71)
+H7 - 0.362 (58)
+Select move H3 with win pct 0.747
+Rounds:  1040
+Temperature:  5
+Time:  3.7148201999953017
+Player.white( o ) H3
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  x  . 
+ D  o  o  x  x  o  x  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  o  o  o  x  x  . 
+ G  .  .  o  o  x  x  x  . 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G1 - 0.369 (65)
+F1 - 0.339 (62)
+B5 - 0.328 (61)
+C5 - 0.300 (60)
+A0 - 0.222 (54)
+E6 - 0.208 (53)
+H7 - 0.067 (45)
+Select move G1 with win pct 0.369
+Rounds:  400
+Temperature:  5
+Time:  1.3912920000148006
+Player.black( x ) G1
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  x  x  .  .  . 
+ C  o  o  x  x  o  .  x  . 
+ D  o  o  x  x  o  x  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  o  o  o  x  x  . 
+ G  .  x  x  x  x  x  x  . 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B5 - 0.719 (139)
+B7 - 0.717 (138)
+G7 - 0.713 (136)
+C5 - 0.692 (133)
+F7 - 0.682 (129)
+E6 - 0.674 (129)
+D6 - 0.667 (126)
+E7 - 0.653 (124)
+A5 - 0.648 (122)
+F1 - 0.627 (118)
+G0 - 0.495 (97)
+H0 - 0.420 (88)
+H7 - 0.358 (81)
+Select move B5 with win pct 0.719
+Rounds:  1560
+Temperature:  5
+Time:  5.243229899992002
+Player.white( o ) B5
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  .  . 
+ C  o  o  x  x  o  .  x  . 
+ D  o  o  x  x  o  x  .  . 
+ E  o  x  o  o  x  o  .  . 
+ F  x  .  o  o  o  x  x  . 
+ G  .  x  x  x  x  x  x  . 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+E6 - 0.400 (55)
+C5 - 0.400 (55)
+A6 - 0.389 (54)
+A5 - 0.377 (53)
+F1 - 0.353 (51)
+D6 - 0.346 (52)
+A0 - 0.167 (42)
+H7 - 0.079 (38)
+Select move E6 with win pct 0.400
+Rounds:  400
+Temperature:  5
+Time:  1.2427903000207152
+Player.black( x ) E6
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  .  . 
+ C  o  o  x  x  o  .  x  . 
+ D  o  o  x  x  o  x  .  . 
+ E  o  x  o  o  x  x  x  . 
+ F  x  .  o  o  o  x  x  . 
+ G  .  x  x  x  x  x  x  . 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C5 - 0.715 (158)
+A5 - 0.713 (157)
+B7 - 0.630 (135)
+G7 - 0.584 (125)
+E7 - 0.581 (124)
+D7 - 0.555 (119)
+F1 - 0.522 (113)
+D6 - 0.486 (107)
+H0 - 0.456 (103)
+F7 - 0.456 (103)
+H7 - 0.451 (102)
+G0 - 0.394 (94)
+Select move C5 with win pct 0.715
+Rounds:  1440
+Temperature:  5
+Time:  3.9780076000024565
+Player.white( o ) C5
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  .  . 
+ C  o  o  x  x  o  o  x  . 
+ D  o  o  x  x  o  o  .  . 
+ E  o  x  o  o  x  o  x  . 
+ F  x  .  o  o  o  o  x  . 
+ G  .  x  x  x  x  o  x  . 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B6 - 0.456 (68)
+D6 - 0.433 (67)
+F1 - 0.406 (64)
+A6 - 0.316 (57)
+A5 - 0.304 (56)
+A0 - 0.091 (44)
+H7 - 0.091 (44)
+Select move B6 with win pct 0.456
+Rounds:  400
+Temperature:  5
+Time:  1.0387980999948923
+Player.black( x ) B6
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  x  . 
+ C  o  o  x  x  o  x  x  . 
+ D  o  o  x  x  x  o  .  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  o  o  o  x  . 
+ G  .  x  x  x  x  o  x  . 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G7 - 0.745 (149)
+B7 - 0.709 (141)
+D6 - 0.696 (138)
+G0 - 0.672 (131)
+E7 - 0.654 (127)
+C7 - 0.634 (123)
+A5 - 0.613 (119)
+F1 - 0.613 (119)
+F7 - 0.598 (117)
+D7 - 0.538 (106)
+H7 - 0.395 (86)
+H0 - 0.369 (84)
+Select move G7 with win pct 0.745
+Rounds:  1440
+Temperature:  5
+Time:  3.5890304999775253
+Player.white( o ) G7
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  x  . 
+ C  o  o  x  x  o  x  x  . 
+ D  o  o  x  x  x  o  .  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  o  o  o  o  . 
+ G  .  x  x  x  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F7 - 0.306 (62)
+D6 - 0.295 (61)
+A6 - 0.279 (61)
+F1 - 0.267 (60)
+A5 - 0.200 (55)
+A0 - 0.137 (51)
+H7 - 0.120 (50)
+Select move F7 with win pct 0.306
+Rounds:  400
+Temperature:  5
+Time:  0.9929472000221722
+Player.black( x ) F7
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  x  . 
+ C  o  o  x  x  o  x  x  . 
+ D  o  o  x  x  x  o  .  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  x  x  x  x  x 
+ G  .  x  x  x  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+B7 - 0.783 (138)
+D6 - 0.746 (130)
+D7 - 0.744 (129)
+E7 - 0.732 (127)
+F1 - 0.730 (126)
+C7 - 0.713 (122)
+A5 - 0.689 (119)
+G0 - 0.642 (109)
+H0 - 0.425 (80)
+Select move B7 with win pct 0.783
+Rounds:  1080
+Temperature:  5
+Time:  2.4712516000145115
+Player.white( o ) B7
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  o  x  o  . 
+ D  o  o  x  x  x  o  .  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  x  x  x  x  x 
+ G  .  x  x  x  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+D6 - 0.321 (53)
+F1 - 0.213 (47)
+A7 - 0.178 (45)
+D7 - 0.178 (45)
+A6 - 0.178 (45)
+C7 - 0.178 (45)
+A5 - 0.119 (42)
+A0 - 0.098 (41)
+H7 - 0.000 (37)
+Select move D6 with win pct 0.321
+Rounds:  400
+Temperature:  5
+Time:  0.857876900001429
+Player.black( x ) D6
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  o  x  o  . 
+ D  o  o  x  x  x  x  x  . 
+ E  o  x  o  x  x  x  x  . 
+ F  x  .  x  x  x  x  x  x 
+ G  .  x  x  x  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+C7 - 0.762 (130)
+D7 - 0.754 (130)
+E7 - 0.738 (126)
+F1 - 0.719 (121)
+A5 - 0.717 (120)
+G0 - 0.651 (109)
+H0 - 0.625 (104)
+Select move C7 with win pct 0.762
+Rounds:  840
+Temperature:  5
+Time:  1.6642789999896195
+Player.white( o ) C7
+ A  .  o  o  x  x  .  .  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  o  x  o  o 
+ D  o  o  x  x  x  x  o  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  x  o  x  x  x 
+ G  .  x  x  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A6 - 0.273 (55)
+E7 - 0.231 (52)
+D7 - 0.212 (52)
+A5 - 0.212 (52)
+F1 - 0.212 (52)
+A7 - 0.146 (48)
+H7 - 0.089 (45)
+A0 - 0.068 (44)
+Select move A6 with win pct 0.273
+Rounds:  400
+Temperature:  5
+Time:  0.766092599980766
+Player.black( x ) A6
+ A  .  o  o  x  x  .  x  . 
+ B  o  o  o  o  o  x  x  o 
+ C  o  o  x  x  x  x  x  o 
+ D  o  o  x  x  x  x  x  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  x  o  x  x  x 
+ G  .  x  x  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A5 - 0.796 (265)
+E7 - 0.735 (230)
+F1 - 0.684 (206)
+G0 - 0.646 (189)
+D7 - 0.624 (181)
+H0 - 0.442 (129)
+Select move A5 with win pct 0.796
+Rounds:  1200
+Temperature:  5
+Time:  1.809335400001146
+Player.white( o ) A5
+ A  .  o  o  o  o  o  x  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  x  o  x  o 
+ D  o  o  x  x  x  o  x  . 
+ E  o  x  o  x  x  o  x  . 
+ F  x  .  x  x  o  x  x  x 
+ G  .  x  x  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+F1 - 0.222 (117)
+A7 - 0.160 (106)
+H7 - 0.066 (91)
+A0 - 0.035 (86)
+Select move F1 with win pct 0.222
+Rounds:  400
+Temperature:  5
+Time:  0.6225544000044465
+Player.black( x ) F1
+ A  .  o  o  o  o  o  x  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  x  o  x  o 
+ D  o  o  x  x  x  o  x  . 
+ E  o  x  x  x  x  o  x  . 
+ F  x  x  x  x  o  x  x  x 
+ G  .  x  x  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+E7 - 0.828 (262)
+G0 - 0.778 (230)
+D7 - 0.778 (230)
+H0 - 0.663 (181)
+A7 - 0.309 (97)
+Select move E7 with win pct 0.828
+Rounds:  1000
+Temperature:  5
+Time:  1.04684019999695
+Player.white( o ) E7
+ A  .  o  o  o  o  o  x  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  x  o  x  o 
+ D  o  o  x  x  x  o  o  . 
+ E  o  x  x  x  x  o  o  o 
+ F  x  x  x  x  o  x  o  o 
+ G  .  x  x  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+D7 - 0.143 (105)
+A7 - 0.135 (104)
+H7 - 0.119 (101)
+A0 - 0.044 (90)
+Select move D7 with win pct 0.143
+Rounds:  400
+Temperature:  5
+Time:  0.3588875999848824
+Player.black( x ) D7
+ A  .  o  o  o  o  o  x  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  x  o  x  o 
+ D  o  o  x  x  x  x  x  x 
+ E  o  x  x  x  x  o  x  o 
+ F  x  x  x  x  o  x  o  o 
+ G  .  x  x  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+G0 - 1.000 (333)
+A7 - 0.792 (197)
+H0 - 0.171 (70)
+Select move G0 with win pct 1.000
+Rounds:  600
+Temperature:  5
+Time:  0.14120749998255633
+Player.white( o ) G0
+ A  .  o  o  o  o  o  x  . 
+ B  o  o  o  o  o  o  o  o 
+ C  o  o  x  x  o  o  x  o 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  o 
+ F  o  o  x  x  o  x  o  o 
+ G  o  o  o  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+A7 - 0.000 (100)
+H0 - 0.000 (100)
+A0 - 0.000 (100)
+H7 - 0.000 (100)
+Select move A7 with win pct 0.000
+Rounds:  400
+Temperature:  5
+Time:  0.04802650000783615
+Player.black( x ) A7
+ A  .  o  o  o  o  o  x  x 
+ B  o  o  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  o 
+ F  o  o  x  x  o  x  o  o 
+ G  o  o  o  o  x  o  o  o 
+ H  .  x  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H0 - 1.000 (200)
+Select move H0 with win pct 1.000
+Rounds:  200
+Temperature:  5
+Time:  0.013124599994625896
+Player.white( o ) H0
+ A  .  o  o  o  o  o  x  x 
+ B  o  o  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  o 
+ F  o  o  x  x  o  x  o  o 
+ G  o  o  o  o  x  o  o  o 
+ H  o  o  o  o  o  o  o  . 
+    0  1  2  3  4  5  6  7
+-------------------------
+H7 - 0.000 (200)
+A0 - 0.000 (200)
+Select move H7 with win pct 0.000
+Rounds:  400
+Temperature:  5
+Time:  0.017557599989231676
+Player.black( x ) H7
+ A  .  o  o  o  o  o  x  x 
+ B  o  o  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  x 
+ F  o  o  x  x  o  x  o  x 
+ G  o  o  o  o  x  o  x  x 
+ H  o  o  o  o  o  o  o  x 
+    0  1  2  3  4  5  6  7
+-------------------------
+pass - 1.000 (200)
+Select move pass with win pct 1.000
+Rounds:  200
+Temperature:  5
+Time:  0.007029300002614036
+Player.white( o ) pass
+ A  .  o  o  o  o  o  x  x 
+ B  o  o  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  x 
+ F  o  o  x  x  o  x  o  x 
+ G  o  o  o  o  x  o  x  x 
+ H  o  o  o  o  o  o  o  x 
+    0  1  2  3  4  5  6  7
+-------------------------
+A0 - 0.000 (400)
+Select move A0 with win pct 0.000
+Rounds:  400
+Temperature:  5
+Time:  0.010666599991964176
+Player.black( x ) A0
+ A  x  x  x  x  x  x  x  x 
+ B  o  x  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  x 
+ F  o  o  x  x  o  x  o  x 
+ G  o  o  o  o  x  o  x  x 
+ H  o  o  o  o  o  o  o  x 
+    0  1  2  3  4  5  6  7
+-------------------------
+pass - 1.000 (200)
+Select move pass with win pct 1.000
+Rounds:  200
+Temperature:  5
+Time:  0.005396499997004867
+Player.white( o ) pass
+ A  x  x  x  x  x  x  x  x 
+ B  o  x  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  x 
+ F  o  o  x  x  o  x  o  x 
+ G  o  o  o  o  x  o  x  x 
+ H  o  o  o  o  o  o  o  x 
+    0  1  2  3  4  5  6  7
+-------------------------
+pass - 0.000 (400)
+Select move pass with win pct 0.000
+Rounds:  400
+Temperature:  5
+Time:  0.007838799996534362
+Player.black( x ) pass
+ A  x  x  x  x  x  x  x  x 
+ B  o  x  o  o  o  o  x  x 
+ C  o  o  x  x  o  x  x  x 
+ D  o  o  x  o  x  x  x  x 
+ E  o  x  o  x  x  o  x  x 
+ F  o  o  x  x  o  x  o  x 
+ G  o  o  o  o  x  o  x  x 
+ H  o  o  o  o  o  o  o  x 
+    0  1  2  3  4  5  6  7
+-------------------------
+Winner Player.white

@@ -1,12 +1,12 @@
 from gotypes import Player, Point
-import random
+import random, time
 import numpy as np
 
 COLS = 'ABCDEFGH'
 
 STONE_TO_CHAR = {
     None: ' . ',
-    Player.black: ' ● ',
+    Player.black: ' x ',
     Player.white: ' o ',
 }
 
@@ -29,7 +29,7 @@ def coord_to_point(coord):
     return Point(row, col)
 
 def print_move(player, move):
-    print("%s %s" % (player, move))
+    print("%s(%s) %s" % (player, STONE_TO_CHAR[player], move))
 
 
 def print_board(board):
@@ -71,3 +71,13 @@ def get_zobrist():
     print('}')
     print()
     print('INIT_BOARD = %d' % (empty_board, ))
+
+
+def cost_time(func):
+    def fun(*args, **kwargs):
+        t = time.perf_counter()
+        result = func(*args, **kwargs)
+        print(f'func {func.__name__} cost time:{time.perf_counter() - t:.8f} s')
+        return result
+
+    return fun

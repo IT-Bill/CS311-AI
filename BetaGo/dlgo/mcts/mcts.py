@@ -48,7 +48,7 @@ class MCTSNode:
 
 
 class MCTSAgent(Agent):
-    def __init__(self, num_rounds=1000):
+    def __init__(self, num_rounds=10):
         self.num_rounds = num_rounds
 
     def select_move(self, game_state: GameState):
@@ -98,6 +98,7 @@ class MCTSAgent(Agent):
     def select_child(self, node: MCTSNode):
         best_score = -1
         best_child = None
+        print(node.children)
         for child in node.children:
             score = self.uct_score(
                 node.num_rollouts, 

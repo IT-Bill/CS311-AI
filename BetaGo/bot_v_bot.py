@@ -12,11 +12,11 @@ sys.stdout = f
 
 def main():
     
-    board_size = 9
+    board_size = 5
     game = GameState.new_game(board_size)
     bots = {
-        Player.black: MCTSAgent(),
-        Player.white: MCTSAgent(),
+        Player.black: RandomBot(),
+        Player.white: RandomBot(),
     }
     while not game.is_over():
         time.sleep(0.1)

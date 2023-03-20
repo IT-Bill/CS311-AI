@@ -28,7 +28,7 @@ class RandomAgent(Agent):
         if self.board_size is None:
             self.set_cache(game_state.board.board_size)
 
-        print(game_state.next_player)
+        # print(game_state.next_player)
         idx = np.arange(len(self.cache))
         np.random.shuffle(idx)
         for i in idx:
