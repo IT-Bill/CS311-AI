@@ -1,0 +1,10 @@
+Winner Player.black
+Winner Player.white
+Winner Player.white
+Winner Player.white
+Winner Player.white
+Winner Player.white
+Winner Player.black
+Winner Player.white
+Winner Player.white
+Winner Player.black

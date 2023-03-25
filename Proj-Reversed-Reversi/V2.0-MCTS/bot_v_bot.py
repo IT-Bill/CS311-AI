@@ -6,17 +6,19 @@ from utils import print_board, print_move
 import time, sys, os
 
 dir = os.path.abspath(os.path.dirname(__file__))
-f = open(dir + "\\mcts_v_mcts.txt", "a")
-f.truncate(0)
-sys.stdout = f
+f1 = open(dir + "\\mcts_v_mcts.txt", "a")
+f1.truncate(0)
 
+
+f2 = open(dir + "\\result.txt", "a")
+f2.truncate(0)
 
 def main():
-    
+    sys.stdout = f1
     game = GameState.new_game()
     bots = {
-        Player.black: MCTSAgent(auto_set_param=False, temperature=5),
-        Player.white: MCTSAgent(auto_set_param=True, temperature=5),
+        Player.black: MCTSAgent(auto_set_param=False, temperature=1, num_rounds=400),
+        Player.white: MCTSAgent(auto_set_param=False, temperature=1, num_rounds=1000),
     }
     while not game.is_over():
 
@@ -29,10 +31,14 @@ def main():
         game = game.apply_move(bot_move)
         print_board(game.board)
         print("-------------------------")
-        f.flush()
+        f1.flush()
     
+    sys.stdout = f2
     print("Winner", game.winner())
+    f2.flush()
 
 if __name__ == '__main__':
-    main()
-    f.close()
+    for i in range(10):
+        main()
+    f1.close()
+    f2.close()
