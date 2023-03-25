@@ -19,7 +19,7 @@ POSITIONS = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7),
 # move format
 # (row, col, state)
 MOVE_NONE = 0  # 针对开局情况
-MOVE_PASS = -1
+MOVE_PASS = 1
 
 
 class GameState:
@@ -95,10 +95,10 @@ class GameState:
         return reverse
 
     def is_over(self):
-        if self.last_move[2] != MOVE_PASS:
+        if self.last_move[0] != MOVE_PASS:
             return False
         second_last_move = self.prev_state.last_move
-        if second_last_move[2] != MOVE_PASS:
+        if second_last_move[0] != MOVE_PASS:
             return False
         return True
 
