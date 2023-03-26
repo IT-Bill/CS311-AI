@@ -85,7 +85,6 @@ class MCTSAgent(Agent):
         for s, m, n in scored_moves[:]:
             print('%s - %.3f (%d)' % (m, s, n))
 
-        
 
         # 完成所有推演后，选择下一步动作
         best_move = None

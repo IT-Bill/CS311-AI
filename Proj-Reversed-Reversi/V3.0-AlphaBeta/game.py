@@ -35,8 +35,6 @@ class GameState:
         self.winner = None
         self.over = None
 
-        self.num_empty = (board == 0).sum()
-
     def apply_move(self, move):
         """执行落子动作，返回新的GameState对象"""
         if move[0] != MOVE_PASS:
@@ -155,5 +153,7 @@ class GameState:
         else:
             # draw
             return 0
+
+
 
 
