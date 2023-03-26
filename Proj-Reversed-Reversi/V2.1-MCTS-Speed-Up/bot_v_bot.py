@@ -1,6 +1,8 @@
 from game import GameState, BLACK, WHITE
 from utils import print_board
-import time, sys, os
+import time
+import sys
+import os
 from mcts import MCTSAgent
 
 dir = os.path.abspath(os.path.dirname(__file__))
@@ -12,13 +14,15 @@ f2 = open(dir + "\\result.txt", "a")
 f2.truncate(0)
 
 
-
 def main():
     sys.stdout = f1
     game = GameState.new_game()
     bots = {
-        BLACK: MCTSAgent(True, use_dfs=False, temperature=6),
-        WHITE: MCTSAgent(True, use_dfs=True, temperature=6),
+        BLACK: MCTSAgent(
+            auto_set_param=True, use_dfs=True,
+            temperature=6, enable_weight_map=True),
+        WHITE: MCTSAgent(
+            auto_set_param=True, use_dfs=True, temperature=6, enable_weight_map=False),
     }
 
     while not game.is_over():
@@ -34,16 +38,14 @@ def main():
         print_board(game.board)
         print("-------------------------")
         f1.flush()
-    
+
     sys.stdout = f2
     print("Winner", game.winner)
     f2.flush()
 
+
 if __name__ == '__main__':
-    for i in range(10):
+    for i in range(50):
         main()
     f1.close()
     f2.close()
-
-
-

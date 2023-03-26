@@ -12,9 +12,6 @@ f2 = open(dir + "\\result.txt", "a")
 f2.truncate(0)
 
 
-
-
-
 def main():
     sys.stdout = f1
     game = GameState.new_game()

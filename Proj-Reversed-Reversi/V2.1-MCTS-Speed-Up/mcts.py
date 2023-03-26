@@ -126,6 +126,8 @@ def alphabeta_select_move(game_state):
 
 
 class MCTSNode:
+    
+
     def __init__(self, game_state, parent=None, prev_move=None):
         self.game_state: GameState = game_state
         self.parent = parent  # 父节点
@@ -162,15 +164,32 @@ class MCTSNode:
 
 
 class MCTSAgent:
-    def __init__(self, auto_set_param=True, use_dfs=False, num_rounds=400, temperature=5, ):
+    import numpy as np
+    a = np.array([
+        [0,  5,  3,  3],
+        [5,  5,  1,  1],
+        [3,  1,  1,  1],
+        [3,  1,  1, 1],
+    ], dtype=int)
+    WEIGHT_MAP = np.append(np.append(a, np.flipud(a), axis=0), np.fliplr(np.append(a, np.flipud(a), axis=0)), axis=1)
+
+
+    def __init__(
+            self, 
+            auto_set_param=True, 
+            use_dfs=False, 
+            num_rounds=400, 
+            temperature=5, 
+            enable_weight_map=False):
         self.num_rounds = num_rounds
         self.temperature = temperature
         self.auto_set_param = auto_set_param
         self.use_dfs = use_dfs
+        self.enable_weight_map = enable_weight_map
 
     def select_move(self, game_state):
         # ! 最后8步DFS、AlphaBeta
-        if self.use_dfs and game_state.num_empty < 10:
+        if self.use_dfs and game_state.num_empty <= 10:
             print("use_dfs")
             return alphabeta_select_move(game_state)
 
@@ -199,7 +218,9 @@ class MCTSAgent:
 
         # TODO ! 简化
         scored_moves = [
-            (child.winning_frac(game_state.next_player),
+            (child.winning_frac(game_state.next_player) * \
+              MCTSAgent.WEIGHT_MAP[tuple(child.prev_move)],
+
              child.prev_move, child.num_rollouts)
             for child in root.children
         ]
@@ -213,6 +234,10 @@ class MCTSAgent:
 
         for child in root.children:
             child_pct = child.winning_frac(game_state.next_player)
+            
+            if self.enable_weight_map:
+                child_pct *= MCTSAgent.WEIGHT_MAP[tuple(child.prev_move)]
+                
             # print(child.prev_move, "胜率", child_pct)
             if child_pct > best_pct:
                 best_pct = child_pct
