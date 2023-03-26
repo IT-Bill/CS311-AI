@@ -1,9 +1,7 @@
 from game import GameState, BLACK, WHITE
-from utils import print_board
-import time
-import sys
-import os
-from mcts import MCTSAgent
+from utils import print_board, print_move
+import time, sys, os
+from alphabeta import alphabeta_select_move
 
 dir = os.path.abspath(os.path.dirname(__file__))
 f1 = open(dir + "\\mcts_v_mcts.txt", "a")
@@ -18,35 +16,35 @@ def main():
     sys.stdout = f1
     game = GameState.new_game()
     bots = {
-        BLACK: MCTSAgent(
-            auto_set_param=True, use_dfs=True,
-            temperature=6, enable_weight_map=True),
-        WHITE: MCTSAgent(
-            auto_set_param=True, use_dfs=True, temperature=6, enable_weight_map=False),
+        BLACK: alphabeta_select_move,
+        WHITE: alphabeta_select_move,
     }
-
     while not game.is_over():
 
         start = time.perf_counter()
-        bot_move = bots[game.next_player].select_move(game)
+
+        if game.next_player == BLACK:
+            bot_move = bots[game.next_player](game, 1)
+        else:
+            bot_move = bots[game.next_player](game, 4)
+        
         end = time.perf_counter()
         print("Time: ", end - start)
 
-        print(game.next_player, bot_move)
-
+        print_move(game.next_player, bot_move)
         game = game.apply_move(bot_move)
-        # print_board(game.board)
-        print(game.board)
+        print_board(game.board)
         print("-------------------------")
         f1.flush()
-
+    
     sys.stdout = f2
     print("Winner", game.winner)
     f2.flush()
 
-
 if __name__ == '__main__':
-    for i in range(50):
-        main()
+    main()
     f1.close()
     f2.close()
+
+
+
