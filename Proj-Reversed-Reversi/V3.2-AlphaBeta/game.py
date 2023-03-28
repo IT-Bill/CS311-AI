@@ -21,85 +21,100 @@ INIT_BOARD = np.array([[0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0]])
 
+BLACK = -1
+WHITE = 1
+EMPTY = 0
+
+masks_dir = (
+    u64(0xffff_ffff_ffff_ffff), # up
+    u64(0xffff_ffff_ffff_ffff), # down
+    u64(0xfefe_fefe_fefe_fefe), # left
+    u64(0x7f7f_7f7f_7f7f_7f7f), # right
+    u64(0xfefe_fefe_fefe_fe00), # left-up
+    u64(0x007f_7f7f_7f7f_7f7f), # right-down
+    u64(0x00fe_fefe_fefe_fefe), # left-down
+    u64(0x7f7f_7f7f_7f7f_7f00), # right-up
+)
+mask_corner = u64(0x8100_0000_0000_0081)
+mask_star = u64(0x42c3_0000_0000_c342)
+
+
+mask_zero = u64(0)
+mask_one = u64(1)
+
+
+steps = [
+    u64(8),
+    u64(1),
+    u64(9),
+    u64(7)
+]
+
+################################
+
+def get_bin_board(board):
+    s = list('0' * 64)
+    for p in np.argwhere(board == -1):
+        s[p[0] * 8 + p[1]] = '1'
+    black_bin_board = u64(int(''.join(s), 2))
+
+    s = list('0' * 64)
+    for p in np.argwhere(board == 1):
+        s[p[0] * 8 + p[1]] = '1'
+    white_bin_board = u64(int(''.join(s), 2))
+    return (black_bin_board, white_bin_board)
+
+
+
+def get_legal_moves(black_board, white_board, next_player):
+    if next_player == BLACK:
+        my_board, opposite_board = black_board, white_board
+    else:
+        my_board, opposite_board = white_board, black_board
+    
+    empty = ~(my_board | opposite_board)
+    legal_moves = mask_zero
+
+    _masks = masks_dir
+
+    for i in range(4):
+        mask1, mask2 = masks_dir[2 * i], masks_dir[2 * i + 1]
+        mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
+        step = Game.steps[i]
+
+        tmp = (my_board << step) & mask_op1
+        
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+
+        legal_moves |= (tmp << step) & mask1 & empty
+        ############################
+        tmp = (my_board >> step) & mask_op2
+        
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+
+        legal_moves |= (tmp >> step) & mask2 & empty
+
+    return legal_moves
+    
+
+
+
+
 class Game:
-    BLACK = -1
-    WHITE = 1
-    EMPTY = 0
-
-    mask = (
-        u64(0xffff_ffff_ffff_ffff), # up
-        u64(0xffff_ffff_ffff_ffff), # down
-        u64(0xfefe_fefe_fefe_fefe), # left
-        u64(0x7f7f_7f7f_7f7f_7f7f), # right
-        u64(0xfefe_fefe_fefe_fe00), # left-up
-        u64(0x007f_7f7f_7f7f_7f7f), # right-down
-        u64(0x00fe_fefe_fefe_fefe), # left-down
-        u64(0x7f7f_7f7f_7f7f_7f00), # right-up
-    )
-
-    steps = [
-        u64(8),
-        u64(1),
-        u64(9),
-        u64(7)
-    ]
-
-    mask_zero = u64(0)
-    mask_one = u64(1)
-
+    
 
     def __init__(self, board):
         self.bin_board = Game.get_bin_board(board)  # (black_bin_board, white_bin_board)
     
-    @staticmethod
-    def get_bin_board(board):
-        s = list('0' * 64)
-        for p in np.argwhere(board == -1):
-            s[p[0] * 8 + p[1]] = '1'
-        black_bin_board = u64(int(''.join(s), 2))
-
-        s = list('0' * 64)
-        for p in np.argwhere(board == 1):
-            s[p[0] * 8 + p[1]] = '1'
-        white_bin_board = u64(int(''.join(s), 2))
-        return (black_bin_board, white_bin_board)
     
-
-    def get_legal_moves(self, next_player):
-        if next_player == Game.BLACK:
-            my_board, opposite_board = self.bin_board
-        else:
-            my_board, opposite_board = self.bin_board[1], self.bin_board[0]
-        
-        empty = ~(my_board | opposite_board)
-        legal_moves = Game.mask_zero
-
-        for i in range(4):
-            mask1, mask2 = Game.mask[2 * i], Game.mask[2 * i + 1]
-            mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
-            step = Game.steps[i]
-
-            tmp = (my_board << step) & mask_op1
-            
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-
-            legal_moves |= (tmp << step) & mask1 & empty
-            ############################
-            tmp = (my_board >> step) & mask_op2
-            
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-
-            legal_moves |= (tmp >> step) & mask2 & empty
-
-        return legal_moves
     
     
     def apply_move(self, next_player, board_idx):
@@ -157,6 +172,9 @@ class Game:
             x &= x - mask_one
             n += 1
         return n
+    
+def negamax(my_board, opposite_board, max_depth, alpha, beta):
+    pass
 
 
 class GameState:
