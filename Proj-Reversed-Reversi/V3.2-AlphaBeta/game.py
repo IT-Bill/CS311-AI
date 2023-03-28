@@ -26,14 +26,14 @@ WHITE = 1
 EMPTY = 0
 
 masks_dir = (
-    u64(0xffff_ffff_ffff_ffff), # up
-    u64(0xffff_ffff_ffff_ffff), # down
-    u64(0xfefe_fefe_fefe_fefe), # left
-    u64(0x7f7f_7f7f_7f7f_7f7f), # right
-    u64(0xfefe_fefe_fefe_fe00), # left-up
-    u64(0x007f_7f7f_7f7f_7f7f), # right-down
-    u64(0x00fe_fefe_fefe_fefe), # left-down
-    u64(0x7f7f_7f7f_7f7f_7f00), # right-up
+    u64(0xffff_ffff_ffff_ffff),  # up
+    u64(0xffff_ffff_ffff_ffff),  # down
+    u64(0xfefe_fefe_fefe_fefe),  # left
+    u64(0x7f7f_7f7f_7f7f_7f7f),  # right
+    u64(0xfefe_fefe_fefe_fe00),  # left-up
+    u64(0x007f_7f7f_7f7f_7f7f),  # right-down
+    u64(0x00fe_fefe_fefe_fefe),  # left-down
+    u64(0x7f7f_7f7f_7f7f_7f00),  # right-up
 )
 mask_corner = u64(0x8100_0000_0000_0081)
 mask_star = u64(0x42c3_0000_0000_c342)
@@ -50,7 +50,11 @@ steps = [
     u64(7)
 ]
 
+MAX_SCORE = 1000000
+MIN_SCORE = -1000000
+
 ################################
+
 
 def get_bin_board(board):
     s = list('0' * 64)
@@ -65,13 +69,8 @@ def get_bin_board(board):
     return (black_bin_board, white_bin_board)
 
 
+def legal_moves(my_board, opposite_board):
 
-def get_legal_moves(black_board, white_board, next_player):
-    if next_player == BLACK:
-        my_board, opposite_board = black_board, white_board
-    else:
-        my_board, opposite_board = white_board, black_board
-    
     empty = ~(my_board | opposite_board)
     legal_moves = mask_zero
 
@@ -80,10 +79,10 @@ def get_legal_moves(black_board, white_board, next_player):
     for i in range(4):
         mask1, mask2 = masks_dir[2 * i], masks_dir[2 * i + 1]
         mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
-        step = Game.steps[i]
+        step = steps[i]
 
         tmp = (my_board << step) & mask_op1
-        
+
         tmp |= (tmp << step) & mask_op1
         tmp |= (tmp << step) & mask_op1
         tmp |= (tmp << step) & mask_op1
@@ -93,7 +92,7 @@ def get_legal_moves(black_board, white_board, next_player):
         legal_moves |= (tmp << step) & mask1 & empty
         ############################
         tmp = (my_board >> step) & mask_op2
-        
+
         tmp |= (tmp >> step) & mask_op2
         tmp |= (tmp >> step) & mask_op2
         tmp |= (tmp >> step) & mask_op2
@@ -103,78 +102,106 @@ def get_legal_moves(black_board, white_board, next_player):
         legal_moves |= (tmp >> step) & mask2 & empty
 
     return legal_moves
-    
+
+
+def apply_move(my_board, opposite_board, board_idx):
+
+    captured_board = mask_zero
+    new_board = mask_one << u64(board_idx)
+    my_board ^= new_board
+
+    for i in range(4):
+        mask1, mask2 = masks_dir[2 * i], masks_dir[2 * i + 1]
+        mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
+        step = steps[i]
+
+        tmp = (new_board << step) & mask_op1
+
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+
+        captured_board |= tmp if (
+            (tmp << step) & mask1 & my_board) else mask_zero
+        ############################
+        tmp = (new_board >> step) & mask_op2
+
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+
+        captured_board |= tmp if (
+            (tmp >> step) & mask2 & my_board) else mask_zero
+
+    # change my_board and opposite_board
+    my_board ^= captured_board
+    opposite_board ^= captured_board
+
+    return my_board, opposite_board
+
+
+def print_2d_board(bin_board):
+    board = np.array([int(s)
+                     for s in list('{:064b}'.format(bin_board))]).reshape(8, 8)
+    print(board)
+
+
+def popcount(x):
+    n = 0
+    mask_one = mask_one
+    while x:
+        x &= x - mask_one
+        n += 1
+    return n
+
+def find_one(x):
+    return [i for i, j in enumerate("{:064b}".format(x)) if j == '1']
 
 
 
-
-class Game:
-    
-
-    def __init__(self, board):
-        self.bin_board = Game.get_bin_board(board)  # (black_bin_board, white_bin_board)
-    
-    
-    
-    
-    def apply_move(self, next_player, board_idx):
-        if next_player == Game.BLACK:
-            my_board, opposite_board = self.bin_board
-        else:
-            my_board, opposite_board = self.bin_board[1], self.bin_board[0]
-
-        captured_board = Game.mask_zero
-        new_board = Game.mask_one << u64(board_idx)
-        my_board ^= new_board
-
-        for i in range(4):
-            mask1, mask2 = Game.mask[2 * i], Game.mask[2 * i + 1]
-            mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
-            step = Game.steps[i]
-
-            tmp = (new_board << step) & mask_op1
-            
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1 
-
-            captured_board |= tmp if ((tmp << step) & mask1 & my_board) else Game.mask_zero
-            ############################
-            tmp = (new_board >> step) & mask_op2
-            
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-
-            captured_board |= tmp if ((tmp >> step) & mask2 & my_board) else Game.mask_zero
-        
-        # change my_board and opposite_board
-        my_board ^= captured_board
-        opposite_board ^= captured_board
-
-        return my_board, opposite_board
-    
-    
-    @staticmethod
-    def print_2d_board(bin_board):
-        board = np.array([int(s) for s in list('{:064b}'.format(bin_board))]).reshape(8, 8)
-        print(board)
-
-    @staticmethod
-    def popcount(x):
-        n = 0
-        mask_one = Game.mask_one
-        while x:
-            x &= x - mask_one
-            n += 1
-        return n
-    
 def negamax(my_board, opposite_board, max_depth, alpha, beta):
-    pass
+    """
+    :return (best_score, best_move)
+    """
+    my_moves = legal_moves(my_board, opposite_board)
+    opposite_moves = legal_moves(opposite_board, my_board)
+
+    # 两方都不能走
+    if (max_depth == 0) or (not my_moves and not opposite_moves):
+        return evaluation(my_board, opposite_board), None
+
+    # 我不能走，但是对方能走
+    if not my_moves and opposite_moves:
+        return -negamax(opposite_board, my_board, max_depth, 
+                        -beta, -alpha), 
+    
+    best_score = MIN_SCORE
+    best_move = None
+    
+    # find the position of 1
+    ones = [i for i, j in enumerate("{:064b}".format(my_board)) if j == '1']
+
+    for idx in ones:
+        new_my_board, new_opposite_board = apply_move(my_board, opposite_board, idx)
+
+        score, _ = -negamax(my_board, opposite_board, max_depth - 1,
+                         -beta, -alpha)
+
+        if score > best_score:
+            best_score = score
+            best_move = idx
+
+    return best_score, best_move
+
+def evaluation(
+    my_board, opposite_board,
+    my_moves=None, opposite_moves=None,
+):
+    return 0
 
 
 class GameState:
@@ -232,7 +259,6 @@ class GameState:
     def get_reverse(self, move):
         if self.over or move[0] == MOVE_PASS:
             return []
-        
 
         reverse = []
         i, j = move
@@ -271,7 +297,7 @@ class GameState:
         second_last_move = self.prev_state.last_move
         if second_last_move[0] != MOVE_PASS:
             return False
-        
+
         self.winner = self.get_winner()
         return True
 
@@ -295,7 +321,7 @@ class GameState:
     def get_winner(self):
         # if not self.is_over():
         #     return None
-        
+
         num_black = (self.board == BLACK).sum()
         num_white = (self.board == WHITE).sum()
 
@@ -306,7 +332,3 @@ class GameState:
         else:
             # draw
             return 0
-
-
-
-
