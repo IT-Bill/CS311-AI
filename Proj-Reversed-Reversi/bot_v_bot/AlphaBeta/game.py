@@ -51,7 +51,7 @@ steps = [
 MAX_INT = 0x7fff_ffff
 MIN_INT = -0x7fff_ffff
 
-
+DEBUG_MAX_DEPTH = 0  # debug
 ################################
 
 
@@ -203,8 +203,17 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
         # new board ，记得反过来！
         score = -negamax(opp_new_board, my_new_board , max_depth - 1,
                          -beta, -alpha)[0]
+        
+        ############
+        # ! print
+        if max_depth == DEBUG_MAX_DEPTH:
+            print((idx // 8, idx % 8), score)
+        ##############
 
         if score > best_score:
+            
+            
+
             best_score = score
             best_move = idx
 
@@ -217,18 +226,30 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
     return best_score, best_move
 
 
-def select_move(my_board, opp_board, max_depth=5):
-    score, move = negamax(my_board, opp_board, max_depth, MIN_INT, MAX_INT)
+def select_move(my_board, opp_board, max_depth):
+    empty_cnt = popcount(~(my_board | opp_board))
+    if empty_cnt <= 10:
+        # 搜完
+        score, move = negamax(my_board, opp_board, empty_cnt, MIN_INT, MAX_INT)
+    else:
+        score, move = negamax(my_board, opp_board, max_depth, MIN_INT, MAX_INT)
     return move
 
-def select_move_easy(board, player, max_depth=5):
+
+def select_move_easy(board, player, max_depth):
+    global DEBUG_MAX_DEPTH
+    DEBUG_MAX_DEPTH = max_depth
+
     black, white = get_bin_board(board)
     if player == BLACK:
         m = select_move(black, white, max_depth)
     elif player == WHITE:
         m = select_move(white, black, max_depth)
     
-    return (m // 8, m % 8)
+    if m is not None:
+        return (m // 8, m % 8)
+    else:
+        return (-1, -1)
 
 ###########################
 # evaluate
@@ -253,15 +274,34 @@ def evaluate(
     opp_corner = opp_board & mask_corner
 
     score = 0
-    score += (popcount(my_star) - popcount(opp_star)) << score_star_shift
-    score -= (popcount(my_inner) - popcount(opp_inner)) << score_inner_shift
-    score -= (popcount(my_corner) - popcount(opp_corner)) << score_corner_shift
-    score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift
-    # print(score)
+    # ! 直接作差是错误的！！！会溢出
+    # score += (popcount(my_star) - popcount(opp_star)) << score_star_shift
+    # score -= (popcount(my_inner) - popcount(opp_inner)) << score_inner_shift
+    # score -= (popcount(my_corner) - popcount(opp_corner)) << score_corner_shift
+    # score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift
+
+    # 正收益
+    score += popcount(my_star) << score_star_shift
+    score -= popcount(opp_star) << score_star_shift
+
+    # 负收益
+    score -= popcount(my_inner) << score_inner_shift
+    score += popcount(opp_inner) << score_inner_shift
+    
+    # 负收益
+    score -= popcount(my_corner) << score_corner_shift
+    score += popcount(opp_corner) << score_corner_shift
+
+    # 正收益
+    score += popcount(my_moves) << score_mobility_shift
+    score -= popcount(opp_moves) << score_mobility_shift
+
+
     return score
 
 def final_evaluate(
     my_board, opp_board
 ):
+    # ! 别写反了！！
     return (popcount(opp_board) - popcount(my_board)) << score_win_shift
     

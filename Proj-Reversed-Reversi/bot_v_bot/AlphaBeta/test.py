@@ -15,4 +15,4 @@ black_board, white_board = get_bin_board(board)
 moves = legal_moves(black_board, white_board)
 print_2d_board(moves)
 
-print(select_move(black_board, white_board, 6))
+print(select_move(black_board, white_board, 8))
