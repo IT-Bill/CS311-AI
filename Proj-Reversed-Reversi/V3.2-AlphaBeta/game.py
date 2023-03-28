@@ -179,8 +179,7 @@ def negamax(my_board, opposite_board, max_depth, alpha, beta):
         return -negamax(opposite_board, my_board, max_depth, 
                         -beta, -alpha), 
     
-    best_score = MIN_SCORE
-    best_move = None
+    best_score, best_move = MIN_SCORE, None
     
     # find the position of 1
     ones = [i for i, j in enumerate("{:064b}".format(my_board)) if j == '1']
