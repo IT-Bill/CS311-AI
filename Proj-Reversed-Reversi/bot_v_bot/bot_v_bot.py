@@ -1,4 +1,8 @@
-from AlphaBeta.game import select_move_easy, popcount, get_bin_board
+from old_AlphaBeta.game import popcount, get_bin_board
+
+from old_AlphaBeta.game import select_move_easy as old
+from new_AlphaBeta.game import select_move_easy as new
+
 from MCTS.game import GameState, BLACK, WHITE
 from MCTS.mcts import MCTSAgent
 from MCTS.utils import print_board
@@ -19,19 +23,14 @@ def main():
     sys.stdout = f1
     game = GameState.new_game()
     bots = {
-        BLACK: MCTSAgent(
-            auto_set_param=True, use_dfs=True,
-            temperature=6),
-        WHITE: select_move_easy
+        BLACK: old,
+        WHITE: new
     }
 
     while not game.is_over():
 
         start = time.perf_counter()
-        if game.next_player == BLACK:
-            bot_move = bots[game.next_player].select_move(game)
-        elif game.next_player == WHITE:
-            bot_move = bots[WHITE](game.board, WHITE, 6)
+        bot_move = bots[game.next_player](game.board, game.next_player, 6)
         end = time.perf_counter()
         print("Time: ", end - start)
 
@@ -41,10 +40,11 @@ def main():
         print_board(game.board)
         # print(game.board)
         b, w = get_bin_board(game.board)
-        print(popcount(b), ": ", popcount(w))
+        print(popcount(b), ":", popcount(w))
         print("-------------------------")
         f1.flush()
 
+    print("Winner", game.winner)
     sys.stdout = f2
     print("Winner", game.winner)
     f2.flush()
