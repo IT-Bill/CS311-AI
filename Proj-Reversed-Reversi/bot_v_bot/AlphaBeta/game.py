@@ -227,18 +227,21 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
 
 
 def select_move(my_board, opp_board, max_depth):
+    global DEBUG_MAX_DEPTH
+
     empty_cnt = popcount(~(my_board | opp_board))
     if empty_cnt <= 10:
         # 搜完
+        DEBUG_MAX_DEPTH = empty_cnt
         score, move = negamax(my_board, opp_board, empty_cnt, MIN_INT, MAX_INT)
     else:
+        DEBUG_MAX_DEPTH = max_depth
         score, move = negamax(my_board, opp_board, max_depth, MIN_INT, MAX_INT)
     return move
 
 
 def select_move_easy(board, player, max_depth):
-    global DEBUG_MAX_DEPTH
-    DEBUG_MAX_DEPTH = max_depth
+    
 
     black, white = get_bin_board(board)
     if player == BLACK:
@@ -256,7 +259,8 @@ def select_move_easy(board, player, max_depth):
 score_corner_shift = 12  # 4096 -
 score_star_shift = 7  # 128 +
 score_inner_shift = 3  # 8 -
-score_mobility_shift = 4 # 16 +  行动力
+score_mobility_shift3 = 3 # 8 +  行动力
+score_mobility_shift4 = 4 # 8 +  行动力
 
 score_win_shift = 20  # 0xfffff
 
@@ -265,6 +269,8 @@ def evaluate(
     my_board, opp_board,
     my_moves, opp_moves,
 ):
+    empty_cnt = popcount(~(my_board | opp_board))
+
     my_star = my_board & mask_star
     my_inner = my_board & mask_inner
     my_corner = my_board & mask_corner
