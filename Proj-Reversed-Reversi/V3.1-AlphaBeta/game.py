@@ -2,11 +2,6 @@ import numpy as np
 from numpy import uint64 as u64
 
 
-BOARD_SIZE = 8
-
-DIRS = set([(-1, 0), (-1, 1), (0, 1), (1, 1),
-            (1, 0), (1, -1), (0, -1), (-1, -1)])
-
 # move format
 # (row, col, state)
 MOVE_PASS = -1
@@ -21,274 +16,328 @@ INIT_BOARD = np.array([[0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0]])
 
-class Game:
-    BLACK = -1
-    WHITE = 1
-    EMPTY = 0
+BLACK = -1
+WHITE = 1
+EMPTY = 0
 
-    mask = (
-        u64(0xffff_ffff_ffff_ffff), # up
-        u64(0xffff_ffff_ffff_ffff), # down
-        u64(0xfefe_fefe_fefe_fefe), # left
-        u64(0x7f7f_7f7f_7f7f_7f7f), # right
-        u64(0xfefe_fefe_fefe_fe00), # left-up
-        u64(0x007f_7f7f_7f7f_7f7f), # right-down
-        u64(0x00fe_fefe_fefe_fefe), # left-down
-        u64(0x7f7f_7f7f_7f7f_7f00), # right-up
-    )
+masks_dir = (
+    u64(0xffff_ffff_ffff_ffff),  # up
+    u64(0xffff_ffff_ffff_ffff),  # down
+    u64(0xfefe_fefe_fefe_fefe),  # left
+    u64(0x7f7f_7f7f_7f7f_7f7f),  # right
+    u64(0xfefe_fefe_fefe_fe00),  # left-up
+    u64(0x007f_7f7f_7f7f_7f7f),  # right-down
 
-    steps = [
-        u64(8),
-        u64(1),
-        u64(9),
-        u64(7)
-    ]
+    # ! 原来这两个写反了，导致翻子错误！！！
+    u64(0x7f7f_7f7f_7f7f_7f00),  # right-up
+    u64(0x00fe_fefe_fefe_fefe),  # left-down
+    # ! ###############################
+)
+mask_all = u64(0xffff_ffff_ffff_ffff)
 
-    mask_zero = u64(0)
-    mask_one = u64(1)
+mask_corner = u64(0x8100_0000_0000_0081)  # 角
+mask_star = u64(0x4281_0000_0000_8142)  # 角旁边的两个位置
+mask_inner = mask_all ^ (mask_corner | mask_star)  # 其他位置
+
+mask_zero = u64(0)
+mask_one = u64(1)
+mask_high_one = u64(0x8000_0000_0000_0000)
 
 
-    def __init__(self, board):
-        self.bin_board = Game.get_bin_board(board)  # (black_bin_board, white_bin_board)
+steps = [
+    u64(8),
+    u64(1),
+    u64(9),
+    u64(7)
+]
+
+MAX_INT = 0x7fff_ffff
+MIN_INT = -0x7fff_ffff
+
+DEBUG_MAX_DEPTH = 0  # debug
+################################
+
+
+def get_bin_board(board):
+    s = list('0' * 64)
+    for p in np.argwhere(board == -1):
+        s[p[0] * 8 + p[1]] = '1'
+    black_bin_board = u64(int(''.join(s), 2))
+
+    s = list('0' * 64)
+    for p in np.argwhere(board == 1):
+        s[p[0] * 8 + p[1]] = '1'
+    white_bin_board = u64(int(''.join(s), 2))
+    return (black_bin_board, white_bin_board)
+
+
+def legal_moves(my_board, opp_board):
+
+    empty = ~(my_board | opp_board)
+    legal_moves = mask_zero
+
+    for i in range(4):
+        mask1, mask2 = masks_dir[2 * i], masks_dir[2 * i + 1]
+        mask_op1, mask_op2 = mask1 & opp_board, mask2 & opp_board
+        step = steps[i]
+
+        tmp = (my_board << step) & mask_op1
+
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+
+        legal_moves |= (tmp << step) & mask1 & empty
+        ############################
+        tmp = (my_board >> step) & mask_op2
+
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+
+        legal_moves |= (tmp >> step) & mask2 & empty
+
+    return legal_moves
+
+
+def apply_move(my_board, opp_board, board_idx):
+
+    captured_board = mask_zero
+    # ! 棋盘左上角为idx=0，所以使用mask_high_one，而且为右移
+    new_board = mask_high_one >> u64(board_idx)
+    my_board ^= new_board
+
+    for i in range(4):
+        mask1, mask2 = masks_dir[2 * i], masks_dir[2 * i + 1]
+        mask_op1, mask_op2 = mask1 & opp_board, mask2 & opp_board
+        step = steps[i]
+
+        tmp = (new_board << step) & mask_op1
+
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+        tmp |= (tmp << step) & mask_op1
+
+        captured_board |= tmp if (
+            (tmp << step) & mask1 & my_board) else mask_zero
+
+        ############################
+        tmp = (new_board >> step) & mask_op2
+
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+        tmp |= (tmp >> step) & mask_op2
+
+        captured_board |= tmp if (
+            (tmp >> step) & mask2 & my_board) else mask_zero
     
-    @staticmethod
-    def get_bin_board(board):
-        s = list('0' * 64)
-        for p in np.argwhere(board == -1):
-            s[p[0] * 8 + p[1]] = '1'
-        black_bin_board = u64(int(''.join(s), 2))
+    # change my_board and opp_board
+    my_board ^= captured_board
+    opp_board ^= captured_board
 
-        s = list('0' * 64)
-        for p in np.argwhere(board == 1):
-            s[p[0] * 8 + p[1]] = '1'
-        white_bin_board = u64(int(''.join(s), 2))
-        return (black_bin_board, white_bin_board)
+    return my_board, opp_board
+
+
+def get_2d_board(bin_board):
+    board = np.array([int(s)
+                     for s in list('{:064b}'.format(bin_board))]).reshape(8, 8)
+    return board
+
+
+def popcount(x):
+    n = 0
+    mask = mask_one
+    while x:
+        x &= x - mask
+        n += 1
+    return n
+
+
+def find_one(x):
+    return [i for i, j in enumerate("{:064b}".format(x)) if j == '1']
+
+
+def negamax(my_board, opp_board, max_depth, alpha, beta):
+    """
+    :return (best_score, best_move)
+    """
+    my_moves = legal_moves(my_board, opp_board)
+    opp_moves = legal_moves(opp_board, my_board)
+
+    # 两方都不能走
+    if not my_moves and not opp_moves:
+        return final_evaluate(my_board, opp_board), None
+
+    # 深度达到限制
+    if max_depth == 0:
+        return evaluate(my_board, opp_board, my_moves, opp_moves), None
+
+    # 我不能走，但是对方能走
+    if not my_moves and opp_moves:
+        # 元组不能直接加负号
+        return -negamax(opp_board, my_board, max_depth - 1,
+                        -beta, -alpha)[0], None
+
+    best_score, best_move = MIN_INT, None
+
+    # find the position of 1
+    # star, inner, corner
+    star_moves = my_moves & mask_star
+    inner_moves = my_moves & mask_inner
+    corner_moves = my_moves & mask_corner
+
+    ones = [i for i, j in enumerate("{:064b}".format(star_moves)) if j == '1'] + \
+           [i for i, j in enumerate("{:064b}".format(inner_moves)) if j == '1'] + \
+           [i for i, j in enumerate("{:064b}".format(corner_moves)) if j == '1']
     
+    # ! ######################### DEBUG
+    # ones = list(reversed(ones))
+    
+    # ! ######################### DEBUG
 
-    def get_legal_moves(self, next_player):
-        if next_player == Game.BLACK:
-            my_board, opposite_board = self.bin_board
-        else:
-            my_board, opposite_board = self.bin_board[1], self.bin_board[0]
+
+    # print(ones)
+
+    for idx in ones:
+        my_new_board, opp_new_board = apply_move(my_board, opp_board, idx)
+        # new board ，记得反过来！
+        score = -negamax(opp_new_board, my_new_board , max_depth - 1,
+                         -beta, -alpha)[0]
         
-        empty = ~(my_board | opposite_board)
-        legal_moves = Game.mask_zero
+        ############
+        # ! print
+        if max_depth == DEBUG_MAX_DEPTH:
+            print((idx // 8, idx % 8), score)
+        ##############
 
-        for i in range(4):
-            mask1, mask2 = Game.mask[2 * i], Game.mask[2 * i + 1]
-            mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
-            step = Game.steps[i]
+        if score > best_score:
 
-            tmp = (my_board << step) & mask_op1
-            
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
+            best_score = score
+            best_move = idx
+            alpha = max(best_score, alpha)
 
-            legal_moves |= (tmp << step) & mask1 & empty
-            ############################
-            tmp = (my_board >> step) & mask_op2
-            
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
+        if alpha >= beta:
+            # pruning
+            break
 
-            legal_moves |= (tmp >> step) & mask2 & empty
+    return best_score, best_move
 
-        return legal_moves
+
+def select_move(my_board, opp_board, max_depth):
+    global DEBUG_MAX_DEPTH
+
+    empty_cnt = popcount(~(my_board | opp_board))
+    if empty_cnt <= 10:
+        # 搜完
+        DEBUG_MAX_DEPTH = empty_cnt
+        score, move = negamax(my_board, opp_board, empty_cnt, MIN_INT, MAX_INT)
+    else:
+        DEBUG_MAX_DEPTH = max_depth
+        score, move = negamax(my_board, opp_board, max_depth, MIN_INT, MAX_INT)
+    return move
+
+
+def select_move_easy(board, player, max_depth):
     
+
+    black, white = get_bin_board(board)
+    if player == BLACK:
+        m = select_move(black, white, max_depth)
+    elif player == WHITE:
+        m = select_move(white, black, max_depth)
     
-    def apply_move(self, next_player, board_idx):
-        if next_player == Game.BLACK:
-            my_board, opposite_board = self.bin_board
-        else:
-            my_board, opposite_board = self.bin_board[1], self.bin_board[0]
+    if m is not None:
+        return (m // 8, m % 8)
+    else:
+        return (-1, -1)
 
-        captured_board = Game.mask_zero
-        new_board = Game.mask_one << u64(board_idx)
-        my_board ^= new_board
+###########################
+# evaluate
+# ! ################################
+# 对于角落，必须先保证自己不下角，再想办法逼对方下角
+# 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
+score_corner_shift = 12  # 4096 -
 
-        for i in range(4):
-            mask1, mask2 = Game.mask[2 * i], Game.mask[2 * i + 1]
-            mask_op1, mask_op2 = mask1 & opposite_board, mask2 & opposite_board
-            step = Game.steps[i]
+score_my_corner_shift = 13  # 8192 -
+score_opp_corner_shift = 12  # 4096
 
-            tmp = (new_board << step) & mask_op1
-            
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1
-            tmp |= (tmp << step) & mask_op1 
+# ! ########################################
 
-            captured_board |= tmp if ((tmp << step) & mask1 & my_board) else Game.mask_zero
-            ############################
-            tmp = (new_board >> step) & mask_op2
-            
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
-            tmp |= (tmp >> step) & mask_op2
+score_star_shift = 7  # 128 +
+score_inner_shift = 3  # 8 -
+score_mobility_shift3 = 3 # 8 +  行动力
+score_mobility_shift4 = 4 # 8 +  行动力
 
-            captured_board |= tmp if ((tmp >> step) & mask2 & my_board) else Game.mask_zero
-        
-        # change my_board and opposite_board
-        my_board ^= captured_board
-        opposite_board ^= captured_board
+score_win_shift = 20  # 0xfffff
 
-        return my_board, opposite_board
+
+def evaluate(
+    my_board, opp_board,
+    my_moves, opp_moves,
+):
+    empty_cnt = popcount(~(my_board | opp_board))
+
+    my_star = my_board & mask_star
+    my_inner = my_board & mask_inner
+    my_corner = my_board & mask_corner
+
+    opp_star = opp_board & mask_star
+    opp_inner = opp_board & mask_inner
+    opp_corner = opp_board & mask_corner
+
+    score = 0
+    # ! 直接作差是错误的！！！会溢出
+    # score += (popcount(my_star) - popcount(opp_star)) << score_star_shift
+    # score -= (popcount(my_inner) - popcount(opp_inner)) << score_inner_shift
+    # score -= (popcount(my_corner) - popcount(opp_corner)) << score_corner_shift
+    # score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift
+
+    # 正收益
+    score += popcount(my_star) << score_star_shift
+    score -= popcount(opp_star) << score_star_shift
+
+    # 负收益
+    score -= popcount(my_inner) << score_inner_shift
+    score += popcount(opp_inner) << score_inner_shift
     
+    # 负收益
+    score -= popcount(my_corner) << score_my_corner_shift
+    score += popcount(opp_corner) << score_opp_corner_shift
+    # score -= popcount(my_corner) << score_corner_shift
+    # score += popcount(opp_corner) << score_corner_shift
+
+    # 正收益
+    if empty_cnt < 15:
+        score += popcount(my_moves) << score_mobility_shift3
+        # score -= popcount(opp_moves) << score_mobility_shift3
+    elif 15 <= empty_cnt <= 35:
+        score += popcount(my_moves) << score_mobility_shift4
+        # score -= popcount(opp_moves) << score_mobility_shift4
+
+
+    return score
+
+def final_evaluate(
+    my_board, opp_board
+):
+    # ! 别写反了！！
+    return (popcount(opp_board) - popcount(my_board)) << score_win_shift
     
-    @staticmethod
-    def print_2d_board(bin_board):
-        board = np.array([int(s) for s in list('{:064b}'.format(bin_board))]).reshape(8, 8)
-        print(board)
-
-    @staticmethod
-    def popcount(x):
-        n = 0
-        mask_one = Game.mask_one
-        while x:
-            x &= x - mask_one
-            n += 1
-        return n
 
 
-class GameState:
-    def __init__(self, board, next_player, prev_state=None, last_move=(-2, -2)):
-        self.board = board  # nparray
-        self.next_player = next_player
-
-        self.prev_state = prev_state
-        self.last_move = last_move
-
-        self.winner = None
-        self.over = None
-
-    def apply_move(self, move):
-        """执行落子动作，返回新的GameState对象"""
-        if move[0] != MOVE_PASS:
-            next_board = np.copy(self.board)
-            reverse = np.array(self.get_reverse(move))
-            next_board[reverse[:, 0], reverse[:, 1]] = self.next_player
-        else:
-            next_board = self.board
-
-        return Game(next_board, -self.next_player, self, move)
-
-    @classmethod
-    def new_game(cls):
-        return Game(INIT_BOARD, BLACK, None)
-
-    def is_valid_move(self, move):
-        if self.over:
-            return False
-
-        # if len(move) == 3 and move[2] == MOVE_PASS:
-        #     return True
-
-        i, j = move
-
-        if self.is_on_grid(i, j) and self.board[i, j] == EMPTY:
-            for dx, dy in DIRS:
-                op_cnt = 0
-                x, y = i + dx, j + dy
-
-                while self.is_on_grid(x, y):
-                    if self.board[x, y] == -self.next_player:
-                        op_cnt += 1
-                        x += dx
-                        y += dy
-                    elif self.board[x, y] == self.next_player and op_cnt > 0:
-                        return True
-
-                    else:
-                        break
-        return False
-
-    def get_reverse(self, move):
-        if self.over or move[0] == MOVE_PASS:
-            return []
-        
-
-        reverse = []
-        i, j = move
-
-        if self.is_on_grid(i, j) and self.board[i, j] == EMPTY:
-            for dx, dy in DIRS:
-                op_cnt = 0
-                x, y = i + dx, j + dy
-
-                while self.is_on_grid(x, y):
-                    if self.board[x, y] == -self.next_player:
-                        op_cnt += 1
-                        x += dx
-                        y += dy
-                    elif self.board[x, y] == self.next_player and op_cnt > 0:
-                        while op_cnt > 0:
-                            x -= dx
-                            y -= dy
-                            reverse.append((x, y))
-                            op_cnt -= 1
-                        break
-
-                    else:
-                        break
-
-        if len(reverse) > 0:
-            reverse.append((i, j))  # 自己将要下的位置
-        return reverse
-
-    def is_over(self):
-        if self.over is not None:
-            return self.over
-
-        if self.last_move[0] != MOVE_PASS:
-            return False
-        second_last_move = self.prev_state.last_move
-        if second_last_move[0] != MOVE_PASS:
-            return False
-        
-        self.winner = self.get_winner()
-        return True
-
-    def is_on_grid(self, i, j):
-        return 0 <= i < BOARD_SIZE and 0 <= j < BOARD_SIZE
-
-    def legal_moves(self):
-        moves = []
-        empty_points = np.argwhere(self.board == 0)
-        # empty_points = self.board.argwhere(self.board == 0)
-        for p in empty_points:
-            if self.is_valid_move(p):
-                moves.append(p)
-
-        # ! 当没有位置可以下的时候，加入跳过
-        if (len(moves) == 0):
-            moves = [(-1, -1)]
-
-        return moves
-
-    def get_winner(self):
-        # if not self.is_over():
-        #     return None
-        
-        num_black = (self.board == BLACK).sum()
-        num_white = (self.board == WHITE).sum()
-
-        if num_black < num_white:
-            return BLACK
-        elif num_white < num_black:
-            return WHITE
-        else:
-            # draw
-            return 0
-
-
-
-
+def get_np_board(black_bin_board, white_bin_board):
+    bi = np.array([(i // 8, i % 8) for i in find_one(black_bin_board)])
+    wi = np.array([(i // 8, i % 8) for i in find_one(white_bin_board)])
+    board = np.zeros((8, 8), dtype=int)
+    board[bi[:, 0], bi[:, 1]] = -1
+    board[wi[:, 0], wi[:, 1]] = 1
+    return board
+    

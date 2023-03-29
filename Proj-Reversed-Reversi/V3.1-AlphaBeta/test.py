@@ -1,22 +1,24 @@
-from game import Game
 import numpy as np
+from game import *
 
-INIT_BOARD = np.array([[0,  0,  0,  0,  0,  0,  0,  0],
-                      [0,  0,  0,  0,  0,  0,  0,  0],
-                      [0,  0,  0,  0,  0,  0,  0,  0],
-                      [0,  0,  0,  -1, 1,  0,  0,  0],
-                      [0,  0,  0, 1,  -1,  0,  0,  0],
-                      [0,  0,  0,  0,  0,  0,  0,  0],
-                      [0,  0,  0,  0,  0,  0,  0,  0],
-                      [0,  0,  0,  0,  0,  0,  0,  0]])
+board = np.array([
+    [ 0,  1, -1,  0, -1, -1, -1,  0],
+    [ 0,  0,  0,  0,  0, -1,  1, -1],
+    [ 0,  0,  0,  0,  0, -1, -1, -1],
+    [ 0,  0,  0,  0,  0,  0,  0, -1],
+    [ 0,  0,  0,  0,  0,  0,  0, -1],
+    [ 0,  0,  0,  0,  0,  0,  0, -1],
+    [ 0,  0,  0,  0,  0,  0,  0,  1],
+    [ 0,  0,  0,  0,  0,  0,  0,  0]
+])
 
-game = Game(INIT_BOARD)
+# print(select_move_easy(board, 1, 2))
+b, w = get_bin_board(board)
+w, b = apply_move(w, b, 7)
+board = get_np_board(b, w)
+print(board)
 
-moves = game.get_legal_moves(-1)
-game.print_2d_board(moves)
-m1 = list("{:064b}".format(moves))
-print("--------------------")
-black_board, white_board = game.apply_move(-1, 20)
-game.print_2d_board(black_board)
-print()
-game.print_2d_board(white_board)
+b, w = get_bin_board(board)
+b, w = apply_move(b, w, 0)
+board = get_np_board(b, w)
+print(board)
