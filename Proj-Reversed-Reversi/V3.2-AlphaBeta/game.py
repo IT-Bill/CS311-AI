@@ -144,6 +144,7 @@ def apply_move(my_board, opp_board, board_idx):
     return my_board, opp_board
 
 
+
 def print_2d_board(bin_board):
     board = np.array([int(s)
                      for s in list('{:064b}'.format(bin_board))]).reshape(8, 8)

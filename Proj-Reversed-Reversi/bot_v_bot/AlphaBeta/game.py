@@ -181,7 +181,7 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
     # 我不能走，但是对方能走
     if not my_moves and opp_moves:
         # 元组不能直接加负号
-        return -negamax(opp_board, my_board, max_depth,
+        return -negamax(opp_board, my_board, max_depth - 1,
                         -beta, -alpha)[0], None
 
     best_score, best_move = MIN_INT, None
@@ -195,6 +195,12 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
     ones = [i for i, j in enumerate("{:064b}".format(star_moves)) if j == '1'] + \
            [i for i, j in enumerate("{:064b}".format(inner_moves)) if j == '1'] + \
            [i for i, j in enumerate("{:064b}".format(corner_moves)) if j == '1']
+    
+    # ! ######################### DEBUG
+    ones = list(reversed(ones))
+    
+    # ! ######################### DEBUG
+
 
     # print(ones)
 
@@ -216,12 +222,11 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
 
             best_score = score
             best_move = idx
-
             alpha = max(best_score, alpha)
 
-            if alpha >= beta:
-                # pruning
-                break
+        if alpha >= beta:
+            # pruning
+            break
 
     return best_score, best_move
 
@@ -299,8 +304,12 @@ def evaluate(
     score += popcount(opp_corner) << score_corner_shift
 
     # 正收益
-    score += popcount(my_moves) << score_mobility_shift
-    score -= popcount(opp_moves) << score_mobility_shift
+    if empty_cnt < 15:
+        score += popcount(my_moves) << score_mobility_shift3
+        # score -= popcount(opp_moves) << score_mobility_shift3
+    elif 15 <= empty_cnt <= 35:
+        score += popcount(my_moves) << score_mobility_shift4
+        # score -= popcount(opp_moves) << score_mobility_shift4
 
 
     return score

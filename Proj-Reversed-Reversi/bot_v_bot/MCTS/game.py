@@ -42,7 +42,12 @@ class GameState:
         if move[0] != MOVE_PASS:
             next_board = np.copy(self.board)
             reverse = np.array(self.get_reverse(move))
-            next_board[reverse[:, 0], reverse[:, 1]] = self.next_player
+            try:
+                next_board[reverse[:, 0], reverse[:, 1]] = self.next_player
+            except:
+                print(move)
+                print(reverse)
+                raise Exception
         else:
             next_board = self.board
 
