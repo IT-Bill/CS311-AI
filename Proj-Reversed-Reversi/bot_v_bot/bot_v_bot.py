@@ -31,7 +31,7 @@ def main():
         if game.next_player == BLACK:
             bot_move = bots[game.next_player].select_move(game)
         elif game.next_player == WHITE:
-            bot_move = bots[WHITE](game.board, WHITE, 5)
+            bot_move = bots[WHITE](game.board, WHITE, 6)
         end = time.perf_counter()
         print("Time: ", end - start)
 

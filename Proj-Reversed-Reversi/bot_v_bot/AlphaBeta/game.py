@@ -27,8 +27,11 @@ masks_dir = (
     u64(0x7f7f_7f7f_7f7f_7f7f),  # right
     u64(0xfefe_fefe_fefe_fe00),  # left-up
     u64(0x007f_7f7f_7f7f_7f7f),  # right-down
-    u64(0x00fe_fefe_fefe_fefe),  # left-down
+
+    # ! 原来这两个写反了，导致翻子错误！！！
     u64(0x7f7f_7f7f_7f7f_7f00),  # right-up
+    u64(0x00fe_fefe_fefe_fefe),  # left-down
+    # ! ###############################
 )
 mask_all = u64(0xffff_ffff_ffff_ffff)
 
@@ -72,8 +75,6 @@ def legal_moves(my_board, opp_board):
 
     empty = ~(my_board | opp_board)
     legal_moves = mask_zero
-
-    _masks = masks_dir
 
     for i in range(4):
         mask1, mask2 = masks_dir[2 * i], masks_dir[2 * i + 1]
@@ -125,6 +126,7 @@ def apply_move(my_board, opp_board, board_idx):
 
         captured_board |= tmp if (
             (tmp << step) & mask1 & my_board) else mask_zero
+
         ############################
         tmp = (new_board >> step) & mask_op2
 
@@ -136,7 +138,7 @@ def apply_move(my_board, opp_board, board_idx):
 
         captured_board |= tmp if (
             (tmp >> step) & mask2 & my_board) else mask_zero
-
+    
     # change my_board and opp_board
     my_board ^= captured_board
     opp_board ^= captured_board
@@ -144,10 +146,10 @@ def apply_move(my_board, opp_board, board_idx):
     return my_board, opp_board
 
 
-def print_2d_board(bin_board):
+def get_2d_board(bin_board):
     board = np.array([int(s)
                      for s in list('{:064b}'.format(bin_board))]).reshape(8, 8)
-    print(board)
+    return board
 
 
 def popcount(x):
@@ -197,7 +199,7 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
            [i for i, j in enumerate("{:064b}".format(corner_moves)) if j == '1']
     
     # ! ######################### DEBUG
-    ones = list(reversed(ones))
+    # ones = list(reversed(ones))
     
     # ! ######################### DEBUG
 
@@ -217,8 +219,6 @@ def negamax(my_board, opp_board, max_depth, alpha, beta):
         ##############
 
         if score > best_score:
-            
-            
 
             best_score = score
             best_move = idx
@@ -261,7 +261,16 @@ def select_move_easy(board, player, max_depth):
 
 ###########################
 # evaluate
+# ! ################################
+# 对于角落，必须先保证自己不下角，再想办法逼对方下角
+# 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
 score_corner_shift = 12  # 4096 -
+
+score_my_corner_shift = 13  # 8192 -
+score_opp_corner_shift = 12  # 4096
+
+# ! ########################################
+
 score_star_shift = 7  # 128 +
 score_inner_shift = 3  # 8 -
 score_mobility_shift3 = 3 # 8 +  行动力
@@ -300,8 +309,10 @@ def evaluate(
     score += popcount(opp_inner) << score_inner_shift
     
     # 负收益
-    score -= popcount(my_corner) << score_corner_shift
-    score += popcount(opp_corner) << score_corner_shift
+    score -= popcount(my_corner) << score_my_corner_shift
+    score += popcount(opp_corner) << score_opp_corner_shift
+    # score -= popcount(my_corner) << score_corner_shift
+    # score += popcount(opp_corner) << score_corner_shift
 
     # 正收益
     if empty_cnt < 15:
@@ -319,4 +330,14 @@ def final_evaluate(
 ):
     # ! 别写反了！！
     return (popcount(opp_board) - popcount(my_board)) << score_win_shift
+    
+
+
+def get_np_board(black_bin_board, white_bin_board):
+    bi = np.array([(i // 8, i % 8) for i in find_one(black_bin_board)])
+    wi = np.array([(i // 8, i % 8) for i in find_one(white_bin_board)])
+    board = np.zeros((8, 8), dtype=int)
+    board[bi[:, 0], bi[:, 1]] = -1
+    board[wi[:, 0], wi[:, 1]] = 1
+    return board
     
