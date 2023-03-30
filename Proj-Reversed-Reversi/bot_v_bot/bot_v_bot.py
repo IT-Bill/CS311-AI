@@ -26,37 +26,37 @@ f3.truncate(0)
 def main():
     sys.stdout = f1
     game = GameState.new_game()
-    # bots = {
-    #     BLACK: MCTSAgent(
-    #         auto_set_param=True, use_dfs=True,
-    #         temperature=6),
-    #     WHITE: new
-    # }
     bots = {
-        BLACK: new,
+        BLACK: MCTSAgent(
+            auto_set_param=True, use_dfs=True,
+            temperature=6),
         WHITE: new
     }
+    # bots = {
+    #     BLACK: new,
+    #     WHITE: new
+    # }
 
     while not game.is_over():
 
         start = time.perf_counter()
         if game.next_player == BLACK:
-            # bot_move = bots[game.next_player].select_move(game)
-            bot_move = bots[game.next_player](game.board, BLACK, 6)
+            bot_move = bots[game.next_player].select_move(game)
+            # bot_move = bots[game.next_player](game.board, BLACK, 4)
         elif game.next_player == WHITE:
-            bot_move = bots[game.next_player](game.board, WHITE, 7)
+            bot_move = bots[game.next_player](game.board, WHITE, 6)
         end = time.perf_counter()
         print("Time: ", end - start)
         
 
         ##########################
         # 输出round legal_moves的数量 时间
-        if game.next_player == BLACK:
-            sys.stdout = f3
-            b, w = get_bin_board(game.board)
-            print((60 - game.num_empty), '|', popcount(legal_moves(w, b)), '|', '{:.4f}'.format(end - start))
-            f3.flush()
-            sys.stdout = f1
+        # if game.next_player == BLACK:
+        sys.stdout = f3
+        b, w = get_bin_board(game.board)
+        print((60 - game.num_empty), '|', popcount(legal_moves(w, b)), '|', '{:.4f}'.format(end - start))
+        f3.flush()
+        sys.stdout = f1
         ##########################
 
         print(game.next_player, bot_move)

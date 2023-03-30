@@ -264,7 +264,7 @@ class MCTSAgent:
         """设置参数"""
         empty = node.game_state.num_empty
         if empty > 7:
-            self.num_rounds = int(ratio[60 - empty] * 800)
+            self.num_rounds = int(ratio[60 - empty] * 100)
 
         # if empty < 10:
         #     r = 200
