@@ -26,25 +26,28 @@ f3.truncate(0)
 def main():
     sys.stdout = f1
     game = GameState.new_game()
-    bots = {
-        BLACK: MCTSAgent(
-            auto_set_param=True, use_dfs=True,
-            temperature=6),
-        WHITE: new
-    }
     # bots = {
-    #     BLACK: new,
+    #     BLACK: MCTSAgent(
+    #         auto_set_param=True, use_dfs=True,
+    #         temperature=6),
     #     WHITE: new
     # }
+    bots = {
+        BLACK: old,
+        WHITE: new
+    }
 
     while not game.is_over():
 
         start = time.perf_counter()
         if game.next_player == BLACK:
-            bot_move = bots[game.next_player].select_move(game)
-            # bot_move = bots[game.next_player](game.board, BLACK, 4)
+            # bot_move = bots[game.next_player].select_move(game)
+            bot_move = bots[game.next_player](game.board, BLACK, 6)
         elif game.next_player == WHITE:
-            bot_move = bots[game.next_player](game.board, WHITE, 6)
+            try:
+                bot_move = bots[game.next_player](game.board, WHITE)
+            except:
+                bot_move = (-1, -1)
         end = time.perf_counter()
         print("Time: ", end - start)
         

@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import uint64 as u64
+from random import shuffle
 
 INIT_BOARD = np.array([[0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0],
@@ -191,9 +192,13 @@ def negamax(
     inner_moves = my_moves & mask_inner
     corner_moves = my_moves & mask_corner
 
+    inner_idxs = [i for i, j in enumerate("{:064b}".format(inner_moves)) if j == '1']
+    shuffle(inner_idxs)
+
     ones = [i for i, j in enumerate("{:064b}".format(C_moves)) if j == '1'] + \
-           [i for i, j in enumerate("{:064b}".format(inner_moves)) if j == '1'] + \
-           [i for i, j in enumerate("{:064b}".format(corner_moves)) if j == '1']
+           inner_idxs + \
+           [i for i, j in enumerate(
+               "{:064b}".format(corner_moves)) if j == '1']
     
     # ! ######################### DEBUG
     # ones = list(reversed(ones))
@@ -280,7 +285,7 @@ def frontier(my_board, opp_board):
 # ! ################################
 # 对于角落，必须先保证自己不下角，再想办法逼对方下角
 # 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
-score_corner_shift = 12  # 4096 -
+# score_corner_shift = 12  # 4096 -
 
 score_my_corner_shift = 13  # 8192 -
 score_opp_corner_shift = 12  # 4096
@@ -341,20 +346,20 @@ def evaluate(
         score -= popcount(capture_board) << score_capture_shift3
 
     elif 15 <= round_cnt < 35:
-        # 行动力之差 * 16 - 吃子数量 * 16
+        # 行动力之差 * 16 - 吃子数量 * 8
 
         score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift4
-        score -= popcount(capture_board) << score_capture_shift4
+        score -= popcount(capture_board) << score_capture_shift3
 
     elif 35 <= round_cnt < 40:
-        # 行动力之差 * 8 - 吃子数量 * 16
+        # 行动力之差 * 8 - 吃子数量 * 8
 
         score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift3
-        score -= popcount(capture_board) << score_capture_shift4
+        score -= popcount(capture_board) << score_capture_shift3
 
     elif 40 <= round_cnt < 50:
         # 吃子数量 * 16
-        score -= popcount(capture_board) << score_capture_shift4
+        score -= popcount(capture_board) << score_capture_shift3
     
     else:
         # 已经可以搜到终局
