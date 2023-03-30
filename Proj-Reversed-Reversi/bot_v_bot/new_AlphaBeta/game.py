@@ -66,7 +66,6 @@ def get_bin_board(board):
 
 
 def legal_moves(my_board, opp_board):
-
     empty = ~(my_board | opp_board)
     legal_moves = mask_zero
 
@@ -234,7 +233,7 @@ def select_move(my_board, opp_board, max_depth):
     global DEBUG_MAX_DEPTH
 
     empty_cnt = popcount(~(my_board | opp_board))
-    if empty_cnt <= 10:
+    if empty_cnt <= 12:
         # 搜完
         DEBUG_MAX_DEPTH = empty_cnt
         score, move = negamax(my_board, opp_board, empty_cnt, MIN_INT, MAX_INT)
@@ -342,16 +341,16 @@ def evaluate(
         score -= popcount(capture_board) << score_capture_shift3
 
     elif 15 <= round_cnt < 35:
-        # 行动力之差 * 16 - 吃子数量 * 8
+        # 行动力之差 * 16 - 吃子数量 * 16
 
         score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift4
-        score -= popcount(capture_board) << score_capture_shift3
+        score -= popcount(capture_board) << score_capture_shift4
 
     elif 35 <= round_cnt < 40:
-        # 行动力之差 * 8 - 吃子数量 * 8
+        # 行动力之差 * 8 - 吃子数量 * 16
 
         score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift3
-        score -= popcount(capture_board) << score_capture_shift3
+        score -= popcount(capture_board) << score_capture_shift4
 
     elif 40 <= round_cnt < 50:
         # 吃子数量 * 16
@@ -378,4 +377,27 @@ def get_np_board(black_bin_board, white_bin_board):
     board[bi[:, 0], bi[:, 1]] = -1
     board[wi[:, 0], wi[:, 1]] = 1
     return board
+
+def bin_to_coord(x):
+    return (x // 8, x % 8)
     
+
+class AI(object):
+    def __init__(self, chessboard_size, color, time_out):
+        self.chessboard_size = chessboard_size
+        self.color = color
+        self.time_out = time_out
+        self.candidate_list = []
+
+    def go(self, chessboard):
+        self.candidate_list.clear()
+
+        if self.color == BLACK:
+            my_board, opp_board = get_bin_board(chessboard)
+        else:
+            opp_board, my_board = get_bin_board(chessboard)
+
+        self.candidate_list = [bin_to_coord(i) for i in find_one(legal_moves(my_board, opp_board))]
+
+        if len(self.candidate_list) > 0:
+            self.candidate_list.append(bin_to_coord(select_move(my_board, opp_board, 6)))
