@@ -40,14 +40,13 @@ def main():
     while not game.is_over():
 
         start = time.perf_counter()
-        if game.next_player == BLACK:
-            # bot_move = bots[game.next_player].select_move(game)
-            bot_move = bots[game.next_player](game.board, BLACK, 6)
-        elif game.next_player == WHITE:
-            try:
+        try:
+            if game.next_player == BLACK:
+                bot_move = bots[game.next_player](game.board, BLACK)
+            elif game.next_player == WHITE:
                 bot_move = bots[game.next_player](game.board, WHITE)
-            except:
-                bot_move = (-1, -1)
+        except:
+            bot_move = (-1, -1)
         end = time.perf_counter()
         print("Time: ", end - start)
         

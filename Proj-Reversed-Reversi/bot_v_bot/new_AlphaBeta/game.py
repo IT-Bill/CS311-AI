@@ -365,7 +365,7 @@ def select_move_easy(board, player, candidate_list=[]):
 
 
 def frontier(my_board, opp_board):
-    """（应该是）对方的潜在行动力"""
+    """边缘子"""
     empty = ~(my_board | opp_board)
     my_frontier_board = opp_frontier_board = mask_zero
     for i in range(4):
@@ -391,8 +391,8 @@ score_corner_shift = 12  # 4096 -
 # score_my_corner_shift = 13  # 8192 -
 # score_opp_corner_shift = 12  # 4096
 
-score_my_corner_shift = 10  # 1024 -
-score_opp_corner_shift = 10  # 512
+score_my_corner_shift = 9  # 1024 -
+score_opp_corner_shift = 9  # 512
 # ! ########################################
 
 score_C_shift = 7  # 128 +
@@ -441,9 +441,11 @@ def evaluate(
     # my_frontier_board, opp_frontier_board = frontier(my_board, opp_board)
 
     # 如果我方行动力为0，而对方不为0，是非常有利的情况，需要特殊考虑
-    pass_my_turn = False
-    if not my_moves and opp_moves:
-        pass_my_turn = True
+    pass_my_turn = not my_moves and opp_moves
+
+    
+    # 奇偶性，当空位为偶数时，最后一步很可能是对方下
+    parity_even = (empty_cnt % 2 == 0)
 
     if round_cnt < 5:
         pass
@@ -473,12 +475,24 @@ def evaluate(
         if pass_my_turn:
             score += 64
 
-    elif 40 <= round_cnt < 50:
+            if not parity_even:
+                # 跳过就可以使空位变成偶数
+                score += 50
+            else:
+                score -= 40
+
+    elif 40 <= round_cnt <= 50:
         # 吃子数量 * 16
         score -= popcount(capture_board) << score_capture_shift4
 
         if pass_my_turn:
             score += 128
+
+            if not parity_even:
+                # 跳过就可以使空位变成偶数
+                score += 50
+            else:
+                score -= 40
 
     else:
         # 已经可以搜到终局
