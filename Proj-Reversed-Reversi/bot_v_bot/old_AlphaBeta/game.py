@@ -440,11 +440,6 @@ def evaluate(
 
     # my_frontier_board, opp_frontier_board = frontier(my_board, opp_board)
 
-    # 如果我方行动力为0，而对方不为0，是非常有利的情况，需要特殊考虑
-    pass_my_turn = False
-    if not my_moves and opp_moves:
-        pass_my_turn = True
-
     if round_cnt < 5:
         pass
 
@@ -470,19 +465,9 @@ def evaluate(
                   ) << score_mobility_shift3
         score -= popcount(capture_board) << score_capture_shift3
 
-        if pass_my_turn:
-            score += 64
-
-    elif 40 <= round_cnt < 50:
+    elif 40 <= round_cnt < 60:
         # 吃子数量 * 16
         score -= popcount(capture_board) << score_capture_shift4
-
-        if pass_my_turn:
-            score += 128
-
-    else:
-        # 已经可以搜到终局
-        pass
 
     return score
 
