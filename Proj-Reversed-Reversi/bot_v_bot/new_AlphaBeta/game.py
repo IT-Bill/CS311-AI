@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import uint64 as u64
 from random import shuffle
+from time import perf_counter
 
 INIT_BOARD = np.array([[0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0],
@@ -30,8 +31,13 @@ masks_dir = (
 )
 mask_all = u64(0xffff_ffff_ffff_ffff)
 
+
+
 mask_corner = u64(0x8100_0000_0000_0081)  # 角
 mask_C = u64(0x4281_0000_0000_8142)  # 角旁边的两个位置
+mask_X = u64(0x0042_0000_0000_4200)  # 角对角线的位置
+mask_CX = mask_C & mask_X
+
 mask_inner = mask_all ^ (mask_corner | mask_C)  # 其他位置
 
 mask_zero = u64(0)
@@ -323,9 +329,6 @@ def select_move(my_board, opp_board, max_depth, func=negamax):
     return move
 
 
-
-from time import perf_counter
-
 def select_move_easy(board, player, candidate_list=[]):
 
     my_board, opp_board = get_bin_board(board, player)
@@ -341,6 +344,7 @@ def select_move_easy(board, player, candidate_list=[]):
     # 第一次查找
     start = perf_counter()
     m = select_move(my_board, opp_board, max_depth, func=negamax)
+    
     end = perf_counter()
     # 先加进去，防止超时被截断
     candidate_list.append(bin_to_coord(m))
@@ -356,7 +360,9 @@ def select_move_easy(board, player, candidate_list=[]):
     print("search again")
     print()
     m = select_move(my_board, opp_board, max_depth + 1, func=negamax)
+    print("-----------", m)
     candidate_list.append(bin_to_coord(m))
+
 
     if m is not None:
         return (m // 8, m % 8)
@@ -381,59 +387,73 @@ def frontier(my_board, opp_board):
     return my_frontier_board, opp_frontier_board
 
 
-###########################
-# evaluate
-# ! ################################
-# 对于角落，必须先保证自己不下角，再想办法逼对方下角
-# 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
-score_corner_shift = 12  # 4096 -
-
-# score_my_corner_shift = 13  # 8192 -
-# score_opp_corner_shift = 12  # 4096
-
-score_my_corner_shift = 9  # 1024 -
-score_opp_corner_shift = 9  # 512
-# ! ########################################
-
-score_C_shift = 7  # 128 +
-score_inner_shift = 4  # 8 -
-
-# 行动力 +
-score_mobility_shift3 = 3  # 8
-score_mobility_shift4 = 4  # 16
-
-# 翻子数量 -
-score_capture_shift3 = 3
-score_capture_shift4 = 4
-
-score_win_shift = 20  # 0xfffff
-
-
 def evaluate(
     my_board, opp_board,
     my_moves, opp_moves,
     capture_board
 ):
+    # ! ##########################
+    #################################
+    # 对于角落，必须先保证自己不下角，再想办法逼对方下角
+    # 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
+    score_corner_shift = 10  # 4096 -
+
+    # score_my_corner_shift = 13  # 8192 -
+    # score_opp_corner_shift = 12  # 4096
+
+    score_my_corner_shift = 10  # 1024 -
+    score_opp_corner_shift = 10  # 512
+    #################################
+    
+
+    score_C_shift = 7  # 128 +
+    score_inner_shift = 4  # 8 -
+
+    # 行动力 +
+    score_mobility_shift3 = 3  # 8
+    score_mobility_shift4 = 4  # 16
+
+    # 翻子数量 -
+    score_capture_shift3 = 3
+    score_capture_shift4 = 4
+
+    
+
+    mask_corner_parts = (
+        u64(0xf0f0_f0f0_0000_0000),  # 左上
+        u64(0x0f0f_0f0f_0000_0000),  # 右上
+        u64(0x0000_0000_f0f0_f0f0),  # 左下
+        u64(0x0000_0000_0f0f_0f0f),  # 右下
+    )
+
+    mask_udlr_lines = (
+        u64(0x7e00_0000_0000_0000), # up
+        u64(0x0000_0000_0000_007e), # down
+        u64(0x0080_8080_8080_8000), # left
+        u64(0x0001_0101_0101_0100), # down
+    )
+    # ! ########################################
+
+
     empty_cnt = popcount(~(my_board | opp_board))
     round_cnt = 60 - empty_cnt  # 除去棋盘上已有的4颗
 
     my_C = my_board & mask_C
+    my_CX = my_board & mask_CX
     my_inner = my_board & mask_inner
     my_corner = my_board & mask_corner
 
     opp_C = opp_board & mask_C
+    opp_CX = my_board & mask_CX
     opp_inner = opp_board & mask_inner
     opp_corner = opp_board & mask_corner
 
     score = 0
 
-    # 正收益
-    score += (popcount(my_C) - popcount(opp_C)) << score_C_shift
-
     # 负收益
     score -= (popcount(my_inner) - popcount(opp_inner)) << score_inner_shift
 
-    # 负收益
+    # 角，臭棋 负收益 挪到下面了
     # score -= (popcount(my_corner) - popcount(opp_corner)) << score_corner_shift
     score -= popcount(my_corner) << score_my_corner_shift
     score += popcount(opp_corner) << score_opp_corner_shift
@@ -443,7 +463,6 @@ def evaluate(
     # 如果我方行动力为0，而对方不为0，是非常有利的情况，需要特殊考虑
     pass_my_turn = not my_moves and opp_moves
 
-    
     # 奇偶性，当空位为偶数时，最后一步很可能是对方下
     parity_even = (empty_cnt % 2 == 0)
 
@@ -453,50 +472,68 @@ def evaluate(
     elif 5 <= round_cnt < 15:
         # 行动力之差 * 8 - 吃子数量 * 8
 
-        score += (popcount(my_moves) - popcount(opp_moves)
-                  ) << score_mobility_shift3
+        score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift3
         score -= popcount(capture_board) << score_capture_shift3
 
     elif 15 <= round_cnt < 30:
-        # 行动力之差 * 16 - 吃子数量 * 16
+        # 行动力之差 * 16 - 吃子数量 * 8
 
-        score += (popcount(my_moves) - popcount(opp_moves)
-                  ) << score_mobility_shift4
+        score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift4
         score -= popcount(capture_board) << score_capture_shift3
 
 
     elif 30 <= round_cnt < 40:
-        # 行动力之差 * 8 - 吃子数量 * 16
+        # 行动力之差 * 8 - 吃子数量 * 8
 
-        score += (popcount(my_moves) - popcount(opp_moves)
-                  ) << score_mobility_shift3
+        score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift3
         score -= popcount(capture_board) << score_capture_shift3
 
-        if pass_my_turn:
-            score += 64
-
-            if not parity_even:
-                # 跳过就可以使空位变成偶数
-                score += 50
-            else:
-                score -= 40
-
-    elif 40 <= round_cnt <= 50:
+    elif 40 <= round_cnt < 60:
         # 吃子数量 * 16
         score -= popcount(capture_board) << score_capture_shift4
 
-        if pass_my_turn:
-            score += 128
 
-            if not parity_even:
-                # 跳过就可以使空位变成偶数
-                score += 50
-            else:
-                score -= 40
+    elif 50 <= round_cnt:
+        # ! 这一部分依然需要，因为从倒数15步左右开始搜索会搜到这里
+        score -= popcount(capture_board) << 5
+    
 
-    else:
-        # 已经可以搜到终局
-        pass
+    # ! ##############################
+    # ! 角落
+    # 10轮之后再考虑角落
+    if 10 <= round_cnt:
+        for mask in mask_corner_parts:
+            # 某一个角不是自己的，而且附近三个位置都被占领，得分增加
+            if not (my_corner & mask) and popcount(my_CX & mask) == 3:
+                score += 60
+        
+            if not (opp_corner & mask) and popcount(opp_CX & mask) == 3:
+                score -= 60
+        
+            # 当对方已经占领角落时，己方不是很有必要再占领角落附近的位置
+            if opp_corner & mask:
+                score -= popcount(my_C & mask) * 60  # 变成普通的翻棋分数
+    
+    # C位，正收益
+    score += (popcount(my_C) - popcount(opp_C)) << score_C_shift
+        
+
+    # 在同一个边上的两个危险点若有其中一个被对方占领，则此条边上所有的己方落子权重都会降低
+    for mask in mask_udlr_lines:
+        cnt = popcount(mask & opp_C)
+        if cnt == 1:
+            score -= popcount(mask & my_inner) * 10
+        if cnt == 2:
+            score -= popcount(mask & my_inner) * 20
+
+
+    # !##############################
+    # 奇偶性
+    # 最后一步留给对手
+
+    # if score == -634:
+    #     a = 10
+    #     evaluate(my_board, opp_board, my_moves, opp_moves, capture_board)
 
     return score
 
@@ -505,7 +542,7 @@ def final_evaluate(
     my_board, opp_board
 ):
     # ! 别写反了！！
-    return (popcount(opp_board) - popcount(my_board)) << score_win_shift
+    return (popcount(opp_board) - popcount(my_board)) << 20
 
 
 def get_np_board(black_bin_board, white_bin_board):
