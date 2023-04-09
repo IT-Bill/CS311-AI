@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import uint64 as u64
 from random import shuffle
-from time import perf_counter
 
 INIT_BOARD = np.array([[0,  0,  0,  0,  0,  0,  0,  0],
                       [0,  0,  0,  0,  0,  0,  0,  0],
@@ -230,9 +229,8 @@ def negamax(
 
         ############
         # ! print
-        if max_depth == DEBUG_MAX_DEPTH:
-            print((idx // 8, idx % 8), score)
-            
+        # if max_depth == DEBUG_MAX_DEPTH:
+        #     print((idx // 8, idx % 8), score)
         ##############
 
         if score > best_score:
@@ -247,101 +245,17 @@ def negamax(
 
     return best_score, best_move
 
-MY = 1
-OPP = 0
-player_now = MY  # 1是自己，0是别人
-
-def negamax(
-        my_board, opp_board, max_depth
-):
-    """
-    :return (best_score, best_move)
-    """
-    my_orig_board, opp_orig_board = my_board, opp_board
-    global player_now
-    player_now = OPP
-
-    # !####################################
-    def negamax_(my_board, opp_board, max_depth, alpha, beta):
-        global player_now
-        player_now ^= 1
-
-        my_moves = legal_moves(my_board, opp_board)
-        opp_moves = legal_moves(opp_board, my_board)
-
-        # 两方都不能走
-        if not my_moves and not opp_moves:
-            return final_evaluate(my_board, opp_board), None
-
-        # 深度达到限制
-        if max_depth == 0:
-            if player_now == MY:
-                return evaluate(my_board, opp_board, my_orig_board, opp_orig_board, my_moves, opp_moves), None
-            else:
-                return evaluate(my_board, opp_board, opp_orig_board, my_orig_board, my_moves, opp_moves), None
-
-        # 我不能走，但是对方能走
-        if not my_moves and opp_moves:
-            # 元组不能直接加负号
-            return -negamax_(opp_board, my_board, max_depth - 1,
-                            -beta, -alpha)[0], None
-
-        best_score, best_move = MIN_INT, None
-
-        # find the position of 1
-        # C, inner, corner
-        C_moves = my_moves & mask_C
-        inner_moves = my_moves & mask_inner
-        corner_moves = my_moves & mask_corner
-
-        # 加入随机扰动
-        inner_idxs = [i for i, j in enumerate("{:064b}".format(inner_moves)) if j == '1']
-        shuffle(inner_idxs)
-
-        ones = [i for i, j in enumerate("{:064b}".format(C_moves)) if j == '1'] + \
-            inner_idxs + \
-            [i for i, j in enumerate(
-                "{:064b}".format(corner_moves)) if j == '1']
-
-        for idx in ones:
-            my_new_board, opp_new_board, capture_board = apply_move(
-                my_board, opp_board, idx)
-            
-
-            # new board ，记得反过来！
-            score = -negamax_(opp_new_board, my_new_board, max_depth - 1,
-                              -beta, -alpha)[0]
-
-            ############
-            # ! print
-            if max_depth == DEBUG_MAX_DEPTH:
-                print((idx // 8, idx % 8), score)
-            ##############
-
-            if score > best_score:
-
-                best_score = score
-                best_move = idx
-                alpha = max(best_score, alpha)
-
-            if alpha >= beta:
-                # pruning
-                break
-
-        return best_score, best_move
-
-    # !####################################
-    return negamax_(my_board, opp_board, max_depth, MIN_INT, MAX_INT)
 
 
-
-def select_move(my_board, opp_board, max_depth):
+def select_move(my_board, opp_board, max_depth, func=negamax):
     global DEBUG_MAX_DEPTH
     DEBUG_MAX_DEPTH = max_depth
-    score, move = negamax(my_board, opp_board, max_depth)
+    score, move = func(my_board, opp_board, max_depth, MIN_INT, MAX_INT)
     return move
 
 
+
+from time import perf_counter
 
 def select_move_easy(board, player, candidate_list=[]):
 
@@ -357,7 +271,7 @@ def select_move_easy(board, player, candidate_list=[]):
     
     # 第一次查找
     start = perf_counter()
-    m = select_move(my_board, opp_board, max_depth)
+    m = select_move(my_board, opp_board, max_depth, func=negamax)
     end = perf_counter()
     # 先加进去，防止超时被截断
     candidate_list.append(bin_to_coord(m))
@@ -368,10 +282,11 @@ def select_move_easy(board, player, candidate_list=[]):
     # ! #########################
 
     # 花的时间比较少，加深一层
+    # if end - start < 0.7:
     # 继续搜，能搜完就加
     print("search again")
     print()
-    m = select_move(my_board, opp_board, max_depth + 1)
+    m = select_move(my_board, opp_board, max_depth + 1, func=negamax)
     candidate_list.append(bin_to_coord(m))
 
     if m is not None:
@@ -399,48 +314,47 @@ def frontier(my_board, opp_board):
 
 ###########################
 # evaluate
+# ! ################################
+# 对于角落，必须先保证自己不下角，再想办法逼对方下角
+# 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
+score_corner_shift = 12  # 4096 -
+
+# score_my_corner_shift = 13  # 8192 -
+# score_opp_corner_shift = 12  # 4096
+
+score_my_corner_shift = 10  # 1024 -
+score_opp_corner_shift = 10  # 512
+# ! ########################################
+
+score_C_shift = 7  # 128 +
+score_inner_shift = 4  # 8 -
+
+# 行动力 +
+score_mobility_shift3 = 3  # 8
+score_mobility_shift4 = 4  # 16
+
+# 翻子数量 -
+score_capture_shift3 = 3
+score_capture_shift4 = 4
+
+score_win_shift = 20  # 0xfffff
+
 
 def evaluate(
     my_board, opp_board,
-    my_orig_board, opp_orig_board,
     my_moves, opp_moves,
+    capture_board
 ):
-    # ! ################################
-    # 对于角落，必须先保证自己不下角，再想办法逼对方下角
-    # 如果corner_shift相同，那么当己方下角，可以逼对方下在两个以上的角落时，角落的分数就会非常大
-    score_corner_shift = 12  # 4096 -
-
-    # score_my_corner_shift = 13  # 8192 -
-    # score_opp_corner_shift = 12  # 4096
-
-    score_my_corner_shift = 10  # 1024 -
-    score_opp_corner_shift = 10  # 512
-    # ! ########################################
-
-    score_C_shift = 7  # 128 +
-    score_inner_shift = 4  # 8 -
-
-    # 行动力 +
-    score_mobility_shift3 = 3  # 8
-    score_mobility_shift4 = 4  # 16
-
-    # 翻子数量 -
-    score_capture_shift3 = 3
-    score_capture_shift4 = 4
-
-
     empty_cnt = popcount(~(my_board | opp_board))
     round_cnt = 60 - empty_cnt  # 除去棋盘上已有的4颗
 
     my_C = my_board & mask_C
     my_inner = my_board & mask_inner
     my_corner = my_board & mask_corner
-    my_captured = ~my_orig_board & my_board
 
     opp_C = opp_board & mask_C
     opp_inner = opp_board & mask_inner
     opp_corner = opp_board & mask_corner
-    opp_captured = ~opp_orig_board & my_board
 
     score = 0
 
@@ -463,44 +377,37 @@ def evaluate(
     elif 5 <= round_cnt < 15:
         # 行动力之差 * 8 - 吃子数量 * 8
 
-        score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift3
-        # score -= popcount(capture_board) << score_capture_shift3
-
-        score -= (popcount(my_captured) - popcount(opp_captured) << score_capture_shift3)
+        score += (popcount(my_moves) - popcount(opp_moves)
+                  ) << score_mobility_shift3
+        score -= popcount(capture_board) << score_capture_shift3
 
     elif 15 <= round_cnt < 30:
-        # 行动力之差 * 16 - 吃子数量 * 8
+        # 行动力之差 * 16 - 吃子数量 * 16
 
-        score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift4
-        # score -= popcount(capture_board) << score_capture_shift3
-        score -= (popcount(my_captured) - popcount(opp_captured) << score_capture_shift3)
+        score += (popcount(my_moves) - popcount(opp_moves)
+                  ) << score_mobility_shift4
+        score -= popcount(capture_board) << score_capture_shift3
 
 
     elif 30 <= round_cnt < 40:
-        # 行动力之差 * 8 - 吃子数量 * 8
+        # 行动力之差 * 8 - 吃子数量 * 16
 
-        score += (popcount(my_moves) - popcount(opp_moves)) << score_mobility_shift3
-        # score -= popcount(capture_board) << score_capture_shift3
-        score -= (popcount(my_captured) - popcount(opp_captured) << score_capture_shift3)
+        score += (popcount(my_moves) - popcount(opp_moves)
+                  ) << score_mobility_shift3
+        score -= popcount(capture_board) << score_capture_shift3
 
     elif 40 <= round_cnt < 60:
         # 吃子数量 * 16
-        if round_cnt <= 50:
-            score += (popcount(my_moves) - popcount(opp_moves)) << 2
-        else:
-            score -= (popcount(my_moves) - popcount(opp_moves)) << 2
-
-        # score -= popcount(capture_board) << score_capture_shift4
-        score -= (popcount(my_captured) - popcount(opp_captured) << score_capture_shift4)
+        score -= popcount(capture_board) << score_capture_shift4
 
     return score
 
 
-
-
-def final_evaluate(my_board, opp_board):
+def final_evaluate(
+    my_board, opp_board
+):
     # ! 别写反了！！
-    return (popcount(opp_board) - popcount(my_board)) << 20
+    return (popcount(opp_board) - popcount(my_board)) << score_win_shift
 
 
 def get_np_board(black_bin_board, white_bin_board):

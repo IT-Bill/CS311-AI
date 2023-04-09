@@ -246,75 +246,6 @@ def negamax(
     return best_score, best_move
 
 
-def pvs(
-    my_board, opp_board, max_depth,
-    alpha, beta,
-    capture_board=mask_zero
-):
-    my_moves = legal_moves(my_board, opp_board)
-    opp_moves = legal_moves(opp_board, my_board)
-
-    # 两方都不能走
-    if not my_moves and not opp_moves:
-        return final_evaluate(my_board, opp_board), None
-
-    # 深度达到限制
-    if max_depth == 0:
-        return evaluate(my_board, opp_board, my_moves, opp_moves, capture_board), None
-    
-    # 我不能走，但是对方能走
-    if not my_moves and opp_moves:
-        # 元组不能直接加负号
-        return -pvs(opp_board, my_board, max_depth - 1,
-                        -beta, -alpha)[0], None
-
-    best_score, best_move = MIN_INT, None
-
-    # find the position of 1
-    # C, inner, corner
-    C_moves = my_moves & mask_C
-    inner_moves = my_moves & mask_inner
-    corner_moves = my_moves & mask_corner
-
-    ones = [i for i, j in enumerate("{:064b}".format(C_moves)) if j == '1'] + \
-           [i for i, j in enumerate("{:064b}".format(inner_moves)) if j == '1'] + \
-           [i for i, j in enumerate(
-               "{:064b}".format(corner_moves)) if j == '1']
-    
-    # ! ################
-    # pvs
-    # 执行着法
-    my_new_board, opp_new_board, capture_board = apply_move(
-            my_board, opp_board, ones[0])
-    
-    best_score = -pvs(my_new_board, opp_new_board, max_depth - 1, 
-                   -beta, -alpha)[0]
-    
-    for idx in ones[1:]:
-        my_new_board, opp_new_board, capture_board = apply_move(
-            my_board, opp_board, idx)
-        
-        # 零窗口搜索
-        score = -negamax(opp_new_board, my_new_board, max_depth - 1,
-                         -alpha - 1, -alpha,
-                         capture_board)[0]
-        
-        # 全窗口搜索
-        if score > alpha and score < beta:
-            score = -pvs(max_depth - 1, -beta, -alpha)
-
-        if score >= best_score:
-            best_score = score
-            best_move = idx
-
-            if score >= alpha:
-                alpha = score
-            if score >= beta:
-                break
-
-    return best_score, best_move
-
-
 
 def select_move(my_board, opp_board, max_depth, func=negamax):
     global DEBUG_MAX_DEPTH
@@ -467,6 +398,11 @@ def evaluate(
 
     elif 40 <= round_cnt < 60:
         # 吃子数量 * 16
+        if round_cnt <= 50:
+            score += (popcount(my_moves) - popcount(opp_moves)) << 2
+        else:
+            score -= (popcount(my_moves) - popcount(opp_moves)) << 2
+
         score -= popcount(capture_board) << score_capture_shift4
 
     return score
