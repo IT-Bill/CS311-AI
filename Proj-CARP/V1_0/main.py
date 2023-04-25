@@ -24,7 +24,9 @@ def read_file(path):
         graph[n1, n2] = c[2]
         graph[n2, n1] = c[2]
         if c[3] != 0:
+            # ! 两个方向都会放进去
             tasks.append(((n1, n2), c[3]))
+            tasks.append(((n2, n1), c[3]))
 
 
     info = {
