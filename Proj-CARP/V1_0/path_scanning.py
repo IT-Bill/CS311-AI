@@ -14,22 +14,31 @@ def rule2(sp, **kwargs):
 
 def rule3(sp, **kwargs):
     """maximize the term dem(t)/sc(t)"""
-    return max(kwargs["tasks"], key=lambda x: x[1] / sp[x[0][0], x[0][1]])
+    return max(kwargs["tasks"], key=lambda x: x[1] / sp[x[0]])
 
 def rule4(sp, **kwargs):
     """minimize the term dem(t)/sc(t)"""
-    return min(kwargs["tasks"], key=lambda x: x[1] / sp[x[0][0], x[0][1]])
+    return min(kwargs["tasks"], key=lambda x: x[1] / sp[x[0]])
 
 def rule5(sp, **kwargs):
     """use rule1 if the vehicle is less than half full, otherwise use rule2"""
     return rule1(sp, **kwargs) if kwargs["remain_cap"] / kwargs["capacity"] > 0.5 else rule2(sp, **kwargs)
 
+num = 5
 
 
+class Vehicle:
+    def __init__(self, remain_cap, route):
+        self.remain_cap = remain_cap
+        self.route = route
 
-def generate_route_by_rule(sp, tasks, depot, capacity, num_vehicles, rule):
+    def __str__(self):
+        return str(self.remain_cap) + "\n" + str(self.route)
+    
+
+def generate_solu_by_rule(sp, tasks, depot, capacity, num_vehicles, rule):
     dummy_task = ((depot, depot), 0)
-    route = []
+    solu = []
     
     # 多辆车
     for _ in range(num_vehicles):
@@ -38,7 +47,7 @@ def generate_route_by_rule(sp, tasks, depot, capacity, num_vehicles, rule):
 
         remain_cap = capacity
         cur_vertex = depot
-        r = []
+        route = [dummy_task]
 
         while len(tasks) > 0:
             valid_tasks = []
@@ -56,10 +65,10 @@ def generate_route_by_rule(sp, tasks, depot, capacity, num_vehicles, rule):
                 task = valid_tasks[0] if valid_tasks[0][0][0] < valid_tasks[1][0][0] else valid_tasks[1]
 
                 # 添加路线
-                r.append(task)
+                route.append(task)
 
-                # 修改车的位置
-                cur_vertex = task[0][0]  
+                # ! 修改车的位置，是tail，不是head
+                cur_vertex = task[0][1]  
 
                 # 移除task
                 tasks.remove(valid_tasks[0])
@@ -80,24 +89,28 @@ def generate_route_by_rule(sp, tasks, depot, capacity, num_vehicles, rule):
                 if len(min_dist_tasks) == 1:  # 1，只有一个
                     task = min_dist_tasks[0]
                 else:  # 多个，使用rule
-                    task = rule(sp, depot=depot, tasks=tasks, 
-                                capacity=capacity, remain_cap=remain_cap)
+                    # !!!!!!! tasks = min_dist_tasks，不是tasks !!!!!!!!!!!
+                    task = rule(sp, 
+                                depot=depot, 
+                                tasks=min_dist_tasks, 
+                                capacity=capacity, 
+                                remain_cap=remain_cap)
                 
-                r.append(task)
-                cur_vertex = task[0][0]
-                remain_cap -= task[1]
+                route.append(task)
+                cur_vertex = task[0][1]  # ! 修改车的位置，是tail，不是head
+                remain_cap -= task[1] 
                 tasks.remove(task)
                 tasks.remove(((task[0][1], task[0][0]), task[1]))
         
-        # 每辆车作为一个list
-        route.append(r)
+        route.append(dummy_task)
+        solu.append(Vehicle(remain_cap, route))
     
-    return route
+    return solu
 
 
-def generate_route_random(tasks, depot, capacity, num_vehicles):
+def generate_solu_random(tasks, depot, capacity, num_vehicles):
     dummy_task = ((depot, depot), 0)
-    route = []
+    solu = []
     
     # 多辆车
     for _ in range(num_vehicles):
@@ -105,7 +118,7 @@ def generate_route_random(tasks, depot, capacity, num_vehicles):
             break
 
         remain_cap = capacity
-        r = []
+        route = [dummy_task]
 
         while len(tasks) > 0:
             valid_tasks = []
@@ -120,25 +133,23 @@ def generate_route_random(tasks, depot, capacity, num_vehicles):
             else:
                 task = choice(valid_tasks)
                 
-                r.append(task)
+                route.append(task)
                 remain_cap -= task[1]
                 tasks.remove(task)
                 tasks.remove(((task[0][1], task[0][0]), task[1]))
         
         # 一辆车回到终点后，加入dummy_task
-        route.append(r)
+        route.append(dummy_task)
+        solu.append(Vehicle(remain_cap, route))
     
-    return route
+    return solu
 
 
-def generate_route(sp, tasks, depot, capacity, num_vehicles, num_routes):
-    return [generate_route_by_rule(
+def generate_solus(sp, tasks, depot, capacity, num_vehicles, num_routes):
+    return [generate_solu_by_rule(
         sp, deepcopy(tasks),
         depot, capacity, num_vehicles, rule)
         for rule in [rule1, rule2, rule3, rule4, rule5]] + \
-        [generate_route_random(deepcopy(tasks), depot, 
+        [generate_solu_random(deepcopy(tasks), depot, 
                                capacity, num_vehicles) for _ in range(num_routes - 5)]
-
-
-
 
