@@ -25,7 +25,7 @@ def rule5(sp, **kwargs):
     return rule1(sp, **kwargs) if kwargs["remain_cap"] / kwargs["capacity"] > 0.5 else rule2(sp, **kwargs)
 
 
-num = 5
+
 
 def generate_route_by_rule(sp, tasks, depot, capacity, num_vehicles, rule):
     dummy_task = ((depot, depot), 0)
