@@ -1,0 +1,53 @@
+-------------------
+INSTANCE ATTRIBUTES
+-------------------
+NAME: Ai13A.ocarp
+VEHICLES: 9
+CAPACITY: 13
+NODES: 13
+EDGES: 23
+REQUIRED_EDGES: 22
+<NODE1> <NODE2> <REQ> <COST> <DEMAND>
+12 13 1 5.00 7.00
+9 10 1 3.00 2.00
+9 8 1 4.00 1.00
+9 7 1 5.00 4.00
+7 11 1 3.00 9.00
+6 11 1 2.00 7.00
+6 7 1 4.00 7.00
+6 8 1 5.00 8.00
+5 12 1 3.00 8.00
+5 11 1 4.00 4.00
+5 6 1 3.00 2.00
+4 5 1 3.00 4.00
+4 8 1 5.00 1.00
+3 13 1 3.00 1.00
+3 12 1 3.00 4.00
+3 4 1 2.00 8.00
+2 13 1 5.00 3.00
+2 3 1 6.00 5.00
+2 8 1 6.00 1.00
+2 10 0 4.00 0.00
+1 4 1 4.00 1.00
+1 3 1 4.00 5.00
+1 2 1 3.00 6.00
+
+
+
+-------------------
+SOLUTION ATTRIBUTES
+-------------------
+PATH_REQUIRED_ARCS <no.> <cost> <remaining capacity> <# req. arcs>: <reqArc 1-start>-<reqArc 1-end> <reqArc 2-start>-<reqArc 2-end> ... <reqArc k-start>-<reqArc k-end>
+PATH 1 6.0 0.0 2: 1-3 3-4 
+PATH 2 7.0 5.0 2: 4-5 5-11 
+PATH 3 4.0 6.0 1: 7-6 
+PATH 4 2.0 6.0 1: 6-11 
+PATH 5 8.0 0.0 2: 11-7 7-9 
+PATH 6 15.0 0.0 4: 10-9 9-8 8-6 6-5 
+PATH 7 6.0 1.0 2: 5-12 12-3 
+PATH 8 23.0 1.0 5: 13-2 2-1 1-4 4-8 8-2 
+PATH 9 14.0 0.0 3: 2-3 3-13 13-12 
+(Note: subsequent required arcs are traversed through their shortest paths)
+
+TOTAL_COST = 85.0
+

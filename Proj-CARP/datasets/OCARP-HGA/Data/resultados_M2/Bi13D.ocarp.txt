@@ -1,0 +1,49 @@
+-------------------
+INSTANCE ATTRIBUTES
+-------------------
+NAME: Bi13D.ocarp
+VEHICLES: 5
+CAPACITY: 75
+NODES: 13
+EDGES: 23
+REQUIRED_EDGES: 15
+<NODE1> <NODE2> <REQ> <COST> <DEMAND>
+12 13 1 5.00 16.00
+9 10 0 3.00 0.00
+9 8 1 4.00 12.00
+9 7 1 5.00 17.00
+7 11 1 3.00 9.00
+6 11 0 2.00 0.00
+6 7 0 4.00 0.00
+6 8 1 5.00 12.00
+5 12 1 3.00 9.00
+5 11 0 4.00 0.00
+5 6 0 3.00 0.00
+4 5 1 3.00 11.00
+4 8 1 5.00 17.00
+3 13 0 3.00 0.00
+3 12 1 3.00 2.00
+3 4 1 2.00 8.00
+2 13 1 5.00 4.00
+2 3 1 6.00 5.00
+2 8 0 6.00 0.00
+2 10 1 4.00 14.00
+1 4 0 4.00 0.00
+1 3 1 4.00 9.00
+1 2 1 3.00 8.00
+
+
+
+-------------------
+SOLUTION ATTRIBUTES
+-------------------
+PATH_REQUIRED_ARCS <no.> <cost> <remaining capacity> <# req. arcs>: <reqArc 1-start>-<reqArc 1-end> <reqArc 2-start>-<reqArc 2-end> ... <reqArc k-start>-<reqArc k-end>
+PATH 1 27.0 19.0 6: 12-13 13-2 2-1 1-3 3-2 2-10 
+PATH 2 5.0 58.0 1: 8-4 
+PATH 3 11.0 45.0 4: 5-12 12-3 3-4 4-5 
+PATH 4 17.0 25.0 4: 6-8 8-9 9-7 7-11 
+PATH 5 0.0 75.0 0: 
+(Note: subsequent required arcs are traversed through their shortest paths)
+
+TOTAL_COST = 60.0
+
