@@ -164,8 +164,6 @@ class Route:
         t = self.tasks
         for idx in range(1, len(t)):
             cost += t[idx].cost + sp[t[idx - 1].t, t[idx].s]
-            # cost += sp[t[idx].s, t[idx].t] + sp[t[idx].t, t[idx + 1].s]
-        
         self.cost = cost
         return cost
         
@@ -208,18 +206,10 @@ class Solution:
         self.routes.append(route)
         self.cost += route.cost
 
-    @DeprecationWarning
-    def calc_cost2(self):
-        cost = 0
-        for r in self.routes:
-            cost += r.cost
-        self.cost = cost
-        return cost
-    
     def calc_cost(self):
         cost = 0
         for r in self.routes:
-            cost += r.calc_cost()
+            cost += r.cost
         self.cost = cost
         return cost
     
@@ -235,7 +225,7 @@ class Solution:
     
     @classmethod
     def crossover(cls, s1: Solution, s2: Solution):
-        s1, s2 = s1.dcopy(), s2.dcopy()
+        # s1, s2 = s1.dcopy(), s2.dcopy()
         s1r, s2r = s1.routes, s2.routes
         a, b = randint(0, len(s1r) - 1), randint(0, len(s2r) - 1)
         # print("crossover", a, b)
@@ -537,33 +527,8 @@ def inversion(route: Route, idx):
 
 
 #!##################################
-# utils
-def update_pop(pop, solu):
-    feasible_list = []
-    infeasible_list = []
-    for i in range(len(pop)):
-        if pop[i].feasible():
-            feasible_list.append(i)
-        else:
-            infeasible_list.append(i)
-    
-    
-    # 保持feasible的比例在0.75以上
-    if solu.feasible() or len(feasible_list) / len(pop) > 0.75:
-        pop.append(solu)
-        pop = sorted(pop, key=lambda x: x.cost)
-        pop.pop()
-        return pop
-    else:
-        best_infeasible = min(infeasible_list, key=lambda i: pop[i].cost)
-        if pop[best_infeasible].cost > solu.cost:
-            # 最好的infeasible都不如solu，换
-            pop.pop(infeasible_list[0])
-            pop.append(solu)
-    
-    return sorted(pop, key=lambda x: x.cost)
-            
 
+            
 def best_feasible_solu(pop):
     """假设pop已经排好序"""
     pop = sorted(pop, key=lambda solu: solu.cost)
@@ -773,13 +738,9 @@ def main(pop_size, timeout):
 
     start = end = perf_counter()
     while end - start < timeout:
-        
-        # print(end - start, end=" ")
         # crossover
         co = sample(pop, k=2)
         new_solu = Solution.crossover(co[0], co[1])
-        # pop = update_pop(pop, new_solu)
-        # new_solu.assert_demand()
 
         # 生成一个随机数，判断应该进行怎样improve
         ty = randint(0, 2)
@@ -787,7 +748,9 @@ def main(pop_size, timeout):
             pass
         elif ty == 1:
             # single insertion
-            new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
+            # new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
+            pass
+
         
         elif ty == 2:
             # merge split
