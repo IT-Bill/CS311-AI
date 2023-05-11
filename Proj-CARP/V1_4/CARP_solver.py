@@ -397,6 +397,9 @@ class Solution:
         cost = self.calc_cost()
         res += "\nq " + str(self.cost)
         return res
+    
+    def __lt__(self, other):
+        return self.cost < other.cost
   
 #! ##########################
 # Read file
@@ -703,30 +706,34 @@ def merge_split(solu: Solution):
 
 
 def update_pop(pop, solu):
-    feasible_list = []
-    infeasible_list = []
-    pop = deepcopy(pop)
-    for i in range(len(pop)):
-        if pop[i].feasible():
-            feasible_list.append(i)
-        else:
-            infeasible_list.append(i)
+    # feasible_list = []
+    # infeasible_list = []
+    # pop = deepcopy(pop)
+    # for i in range(len(pop)):
+    #     if pop[i].feasible():
+    #         feasible_list.append(i)
+    #     else:
+    #         infeasible_list.append(i)
     
     
-    # 保持feasible的比例在0.75以上
-    if solu.feasible() or len(feasible_list) / len(pop) > 0.75:
-        pop.append(solu)
-        pop = sorted(pop, key=lambda x: x.eval())
-        pop.pop()
-        return pop
-    else:
-        best_infeasible = min(infeasible_list, key=lambda i: pop[i].eval())
-        if pop[best_infeasible].eval() > solu.eval():
-            # 最好的infeasible都不如solu，换
-            pop.pop(infeasible_list[0])
-            pop.append(solu)
+    # # 保持feasible的比例在0.75以上
+    # if solu.feasible() or len(feasible_list) / len(pop) > 0.75:
+    #     pop.append(solu)
+    #     pop = sorted(pop, key=lambda x: x.eval())
+    #     pop.pop()
+    #     return pop
+    # else:
+    #     best_infeasible = min(infeasible_list, key=lambda i: pop[i].eval())
+    #     if pop[best_infeasible].eval() > solu.eval():
+    #         # 最好的infeasible都不如solu，换
+    #         pop.pop(infeasible_list[0])
+    #         pop.append(solu)
     
-    return sorted(pop, key=lambda x: x.eval())
+    # return sorted(pop, key=lambda x: x.eval())
+    pop.append(solu)
+    worst = np.argmax(list(map(lambda solu: solu.eval(), pop)))
+    pop.pop(worst)
+    # return sorted(pop + [solu], key=lambda x: x.cost)[:pop_size]
 
 
 def main(pop_size, timeout):
@@ -748,7 +755,7 @@ def main(pop_size, timeout):
             pass
         elif ty == 1:
             # single insertion
-            # new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
+            new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
             pass
 
         
@@ -756,7 +763,7 @@ def main(pop_size, timeout):
             # merge split
             new_solu = merge_split(new_solu)
         
-        if new_solu is not None and new_solu not in tabu_list:
+        if new_solu is not None and new_solu not in pop and new_solu not in tabu_list:
             pop = update_pop(pop, new_solu)
             # new_solu.assert_demand()
         
