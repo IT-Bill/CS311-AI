@@ -80,7 +80,6 @@ class Task:
             return "0"
         return f"({self.s + 1},{self.t + 1})"
 
-
 class Route:
     def __init__(self, tasks=None, cost=0, remain_cap=None):
         """
@@ -195,7 +194,7 @@ class Route:
     def output(self):
         str_tasks = [task.output() for task in self.tasks]
         return ",".join(str_tasks)
-    
+
 class Solution:
     def __init__(self, routes=[], cost=0):
         # ! 需要deepcopy，否则会一直在原来的列表上累加
@@ -538,8 +537,6 @@ def inversion(solu: Solution):
 
 
 #!##################################
-
-            
 def best_feasible_solu(pop):
     """假设pop已经排好序"""
     pop = sorted(pop, key=lambda solu: solu.cost)
