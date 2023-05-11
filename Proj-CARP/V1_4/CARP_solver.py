@@ -365,7 +365,7 @@ class Solution:
         
         score = 0
         score += self.cost
-        score += int(score * (unserved_demand * 1.5 / gv.total_demand))
+        # score += int(score * (unserved_demand * 1.5 / gv.total_demand))
 
         return score
 
@@ -393,13 +393,8 @@ class Solution:
         res = ""
         str_routes = [route.output() for route in self.routes]
         res += "s " + ",".join(str_routes)
-
-        cost = self.calc_cost()
         res += "\nq " + str(self.cost)
         return res
-    
-    def __lt__(self, other):
-        return self.cost < other.cost
   
 #! ##########################
 # Read file
@@ -530,8 +525,10 @@ def init_pop(pop_size):
 #!#######################################
 # neighbor operation
 
-def inversion(route: Route, idx):
+def inversion(solu: Solution):
     """翻转route中的一个task"""
+    
+
     route = deepcopy(route)
     task = route[idx]
     change_cost = 0
@@ -719,7 +716,7 @@ def merge_split(solu: Solution):
 def update_pop(pop, solu):
     feasible_list = []
     infeasible_list = []
-    # pop = deepcopy(pop)
+    pop = deepcopy(pop)
     for i in range(len(pop)):
         if pop[i].feasible():
             feasible_list.append(i)
@@ -732,7 +729,7 @@ def update_pop(pop, solu):
         pop.append(solu)
         pop = sorted(pop, key=lambda x: x.eval())
         pop.pop()
-        # return pop
+        return pop
     else:
         best_infeasible = min(infeasible_list, key=lambda i: pop[i].eval())
         if pop[best_infeasible].eval() > solu.eval():
@@ -740,15 +737,14 @@ def update_pop(pop, solu):
             pop.pop(infeasible_list[0])
             pop.append(solu)
     
-    
-    # return sorted(pop, key=lambda x: x.eval())
-    # pop.append(solu)
-    # worst = np.argmax(list(map(lambda solu: solu.eval(), pop)))
-    # pop.pop(worst)
-    # return sorted(pop + [solu], key=lambda x: x.cost)[:pop_size]
+    return sorted(pop, key=lambda x: x.eval())
 
 
-def main(pop_size, timeout):
+def main(pop_size, seed, timeout, info):
+    gv.init(info)
+
+    random.seed(seed)
+
     pop = init_pop(pop_size)
     best_solu = min(pop, key=lambda x: x.eval())
     best_eval = best_solu.eval()
@@ -767,7 +763,7 @@ def main(pop_size, timeout):
             pass
         elif ty == 1:
             # single insertion
-            new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
+            # new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
             pass
 
         
@@ -775,8 +771,8 @@ def main(pop_size, timeout):
             # merge split
             new_solu = merge_split(new_solu)
         
-        if new_solu is not None and new_solu not in pop and new_solu not in tabu_list:
-            update_pop(pop, new_solu)
+        if new_solu is not None and new_solu not in tabu_list:
+            pop = update_pop(pop, new_solu)
             # new_solu.assert_demand()
         
             tabu_list.append(new_solu)
@@ -799,6 +795,7 @@ def main(pop_size, timeout):
 if __name__ == "__main__":
     from getopt import getopt
     import sys
+    import multiprocessing
     args = getopt(sys.argv, "-s:-t:")[1]
     file_path = args[1]
     timeout = int(args[3])
@@ -806,18 +803,20 @@ if __name__ == "__main__":
 
     # !debug
     # file_path = "P:\CS311-AI\Proj-CARP\V1_2\sample1.dat"
-    # timeout = 20
+    # timeout = 10
     # seed = 10
     # !####
-
-    random.seed(seed)
-
     info = read_file(file_path)
     gv.init(info)
 
-    result = main(15, timeout - 1)
-    # result = best_feasible_solu(init_pop(10))
-    print(result.output())
+    args_list = [(15, seed + i, timeout - 2, info) for i in range(8)]
+    pool = multiprocessing.Pool(8).starmap(main, args_list)
+    print(pool)
+    # result = main(15, seed, timeout - 2)
+    # print(result.output())
 
+    best = min(pool, key=lambda solu: solu.cost)
+    print(best.output())
 
+# python .\CARP_solver.py ../datasets/egl-e1-A.dat -t 60 -s 5037913
 
