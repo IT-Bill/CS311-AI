@@ -393,13 +393,8 @@ class Solution:
         res = ""
         str_routes = [route.output() for route in self.routes]
         res += "s " + ",".join(str_routes)
-
-        cost = self.calc_cost()
         res += "\nq " + str(self.cost)
         return res
-    
-    def __lt__(self, other):
-        return self.cost < other.cost
   
 #! ##########################
 # Read file
@@ -502,17 +497,16 @@ def gene_solu():
                 
             else: 
                 # 使用类似path-scanning的方法，但是随机选取
-                # min_deadhead = MAX_COST
-                # min_deadhead_tasks = []
-                # for task in valid_tasks:
-                #     deadhead = gv.sp[route.tasks[-1].t, task.s]
-                #     if deadhead < min_deadhead:
-                #         min_deadhead_tasks = [task]
-                #     elif deadhead == min_deadhead:
-                #         min_deadhead_tasks.append(task)
+                min_deadhead = MAX_COST
+                min_deadhead_tasks = []
+                for task in valid_tasks:
+                    deadhead = gv.sp[route.tasks[-1].t, task.s]
+                    if deadhead < min_deadhead:
+                        min_deadhead_tasks = [task]
+                    elif deadhead == min_deadhead:
+                        min_deadhead_tasks.append(task)
                 
-                # task = choice(min_deadhead_tasks)
-                task = choice(valid_tasks)
+                task = choice(min_deadhead_tasks)
                 route.append_task(task)
 
                 unserved_no.remove(task.no)
@@ -719,7 +713,7 @@ def merge_split(solu: Solution):
 def update_pop(pop, solu):
     feasible_list = []
     infeasible_list = []
-    # pop = deepcopy(pop)
+    pop = deepcopy(pop)
     for i in range(len(pop)):
         if pop[i].feasible():
             feasible_list.append(i)
@@ -732,7 +726,7 @@ def update_pop(pop, solu):
         pop.append(solu)
         pop = sorted(pop, key=lambda x: x.eval())
         pop.pop()
-        # return pop
+        return pop
     else:
         best_infeasible = min(infeasible_list, key=lambda i: pop[i].eval())
         if pop[best_infeasible].eval() > solu.eval():
@@ -740,12 +734,7 @@ def update_pop(pop, solu):
             pop.pop(infeasible_list[0])
             pop.append(solu)
     
-    
-    # return sorted(pop, key=lambda x: x.eval())
-    # pop.append(solu)
-    # worst = np.argmax(list(map(lambda solu: solu.eval(), pop)))
-    # pop.pop(worst)
-    # return sorted(pop + [solu], key=lambda x: x.cost)[:pop_size]
+    return sorted(pop, key=lambda x: x.eval())
 
 
 def main(pop_size, timeout):
@@ -767,7 +756,7 @@ def main(pop_size, timeout):
             pass
         elif ty == 1:
             # single insertion
-            new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
+            # new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
             pass
 
         
@@ -775,8 +764,8 @@ def main(pop_size, timeout):
             # merge split
             new_solu = merge_split(new_solu)
         
-        if new_solu is not None and new_solu not in pop and new_solu not in tabu_list:
-            update_pop(pop, new_solu)
+        if new_solu is not None and new_solu not in tabu_list:
+            pop = update_pop(pop, new_solu)
             # new_solu.assert_demand()
         
             tabu_list.append(new_solu)
