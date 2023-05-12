@@ -737,7 +737,8 @@ def update_pop(pop, solu):
     return sorted(pop, key=lambda x: x.eval())
 
 
-def main(pop_size, timeout):
+def main(pop_size, seed, timeout):
+    random.seed(seed)
     pop = init_pop(pop_size)
     best_solu = min(pop, key=lambda x: x.eval())
     best_eval = best_solu.eval()
@@ -805,7 +806,6 @@ if __name__ == "__main__":
     gv.init(info)
 
     result = main(15, timeout - 1)
-    # result = best_feasible_solu(init_pop(10))
     print(result.output())
 
 
