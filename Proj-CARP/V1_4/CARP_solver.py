@@ -524,16 +524,16 @@ def init_pop(pop_size):
 #!#######################################
 # neighbor operation
 
-def inversion(solu: Solution):
-    """翻转route中的一个task"""
+# def inversion(solu: Solution):
+#     """翻转route中的一个task"""
     
 
-    route = deepcopy(route)
-    task = route[idx]
-    change_cost = 0
-    change_cost -= route.remove_task(task, idx)
-    change_cost += route.insert_task(idx, task)
-    return route
+#     route = deepcopy(route)
+#     task = route[idx]
+#     change_cost = 0
+#     change_cost -= route.remove_task(task, idx)
+#     change_cost += route.insert_task(idx, task)
+#     return route
 
 
 #!##################################
@@ -760,15 +760,21 @@ def main(pop_size, seed, timeout, info):
             pass
         elif ty == 1:
             # single insertion
-            # new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
+            new_solu = single_insert(new_solu, best_eval, tabu_list, 10)
             pass
 
         
         elif ty == 2:
             # merge split
-            new_solu = merge_split(new_solu)
+            best_ms_solu = new_solu
+            for i in range(5):
+                ms_solu = merge_split(new_solu.dcopy())
+                if new_solu.eval() < best_ms_solu.eval():
+                    best_ms_solu = ms_solu.dcopy()
+            new_solu = best_ms_solu.dcopy()
+
         
-        if new_solu is not None and new_solu not in tabu_list:
+        if new_solu is not None and new_solu not in pop and new_solu not in tabu_list:
             pop = update_pop(pop, new_solu)
             # new_solu.assert_demand()
         
@@ -808,12 +814,15 @@ if __name__ == "__main__":
 
     args_list = [(15, seed + i, timeout - 2, info) for i in range(8)]
     pool = multiprocessing.Pool(8).starmap(main, args_list)
-    print(pool)
+    # print(pool)
     # result = main(15, seed, timeout - 2)
     # print(result.output())
 
     best = min(pool, key=lambda solu: solu.cost)
     print(best.output())
 
-# python .\CARP_solver.py ../datasets/egl-e1-A.dat -t 60 -s 5037913
+"""
+cd Proj-CARP\V1_4 && python .\CARP_solver.py ../datasets/egl-e1-A.dat -t 60 -s 5037913
+
+"""
 
