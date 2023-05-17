@@ -1,55 +1,54 @@
- NOMBRE : gdb22
- COMENTARIO : 10000 (cota superior) 
- VERTICES : 11
- ARISTAS_REQ : 44
- ARISTAS_NOREQ : 0
- VEHICULOS : 8
- CAPACIDAD : 27
- TIPO_COSTES_ARISTAS : EXPLICITOS
- COSTE_TOTAL_REQ : 191
- LISTA_ARISTAS_REQ :
- ( 1, 2)  coste 6 demanda 5
- ( 1, 3)  coste 1 demanda 4
- ( 1, 4)  coste 2 demanda 4
- ( 1, 5)  coste 1 demanda 1
- ( 1, 6)  coste 1 demanda 6
- ( 1, 7)  coste 1 demanda 3
- ( 1, 8)  coste 1 demanda 6
- ( 1, 9)  coste 2 demanda 1
- ( 1, 10)  coste 3 demanda 9
- ( 1, 11)  coste 3 demanda 5
- ( 2, 3)  coste 5 demanda 3
- ( 2, 4)  coste 1 demanda 7
- ( 2, 5)  coste 8 demanda 9
- ( 2, 7)  coste 1 demanda 1
- ( 2, 8)  coste 1 demanda 2
- ( 2, 9)  coste 8 demanda 4
- ( 2, 11)  coste 5 demanda 1
- ( 3, 4)  coste 6 demanda 1
- ( 3, 5)  coste 3 demanda 3
- ( 3, 7)  coste 1 demanda 4
- ( 3, 9)  coste 9 demanda 8
- ( 3, 10)  coste 1 demanda 6
- ( 3, 11)  coste 8 demanda 9
- ( 4, 5)  coste 7 demanda 7
- ( 4, 6)  coste 6 demanda 9
- ( 4, 7)  coste 7 demanda 7
- ( 4, 8)  coste 7 demanda 5
- ( 4, 9)  coste 1 demanda 4
- ( 4, 10)  coste 8 demanda 2
- ( 4, 11)  coste 3 demanda 8
- ( 5, 7)  coste 6 demanda 8
- ( 5, 8)  coste 1 demanda 2
- ( 5, 10)  coste 6 demanda 7
- ( 5, 11)  coste 8 demanda 8
- ( 6, 7)  coste 5 demanda 3
- ( 6, 8)  coste 8 demanda 6
- ( 6, 9)  coste 5 demanda 1
- ( 6, 10)  coste 6 demanda 1
- ( 7, 9)  coste 6 demanda 4
- ( 7, 10)  coste 2 demanda 2
- ( 7, 11)  coste 1 demanda 5
- ( 8, 9)  coste 9 demanda 3
- ( 9, 10)  coste 7 demanda 8
- ( 9, 11)  coste 4 demanda 3
- DEPOSITO :   1
+NAME : gdb22
+VERTICES : 11
+DEPOT : 1
+REQUIRED EDGES : 44
+NON-REQUIRED EDGES : 0
+VEHICLES : 8
+CAPACITY : 27
+TOTAL COST OF REQUIRED EDGES : 191
+NODES  COST  DEMAND
+1 2 6 5
+1 3 1 4
+1 4 2 4
+1 5 1 1
+1 6 1 6
+1 7 1 3
+1 8 1 6
+1 9 2 1
+1 10 3 9
+1 11 3 5
+2 3 5 3
+2 4 1 7
+2 5 8 9
+2 7 1 1
+2 8 1 2
+2 9 8 4
+2 11 5 1
+3 4 6 1
+3 5 3 3
+3 7 1 4
+3 9 9 8
+3 10 1 6
+3 11 8 9
+4 5 7 7
+4 6 6 9
+4 7 7 7
+4 8 7 5
+4 9 1 4
+4 10 8 2
+4 11 3 8
+5 7 6 8
+5 8 1 2
+5 10 6 7
+5 11 8 8
+6 7 5 3
+6 8 8 6
+6 9 5 1
+6 10 6 1
+7 9 6 4
+7 10 2 2
+7 11 1 5
+8 9 9 3
+9 10 7 8
+9 11 4 3
+END

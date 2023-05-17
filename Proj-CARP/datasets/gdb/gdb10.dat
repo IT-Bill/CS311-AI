@@ -1,36 +1,35 @@
- NOMBRE : gdb10
- COMENTARIO : 10000 (cota superior) 
- VERTICES : 12
- ARISTAS_REQ : 25
- ARISTAS_NOREQ : 0
- VEHICULOS : 4
- CAPACIDAD : 10
- TIPO_COSTES_ARISTAS : EXPLICITOS
- COSTE_TOTAL_REQ : 252
- LISTA_ARISTAS_REQ :
- ( 1, 8)  coste 9 demanda 1
- ( 1, 9)  coste 4 demanda 2
- ( 1, 10)  coste 13 demanda 1
- ( 1, 11)  coste 12 demanda 2
- ( 2, 1)  coste 11 demanda 1
- ( 2, 3)  coste 15 demanda 1
- ( 2, 4)  coste 18 demanda 2
- ( 2, 5)  coste 8 demanda 2
- ( 3, 4)  coste 8 demanda 2
- ( 3, 8)  coste 18 demanda 2
- ( 3, 9)  coste 6 demanda 1
- ( 4, 1)  coste 7 demanda 1
- ( 4, 6)  coste 10 demanda 2
- ( 4, 11)  coste 17 demanda 1
- ( 5, 1)  coste 9 demanda 2
- ( 5, 6)  coste 15 demanda 1
- ( 6, 11)  coste 3 demanda 2
- ( 7, 2)  coste 6 demanda 1
- ( 7, 4)  coste 11 demanda 2
- ( 7, 5)  coste 5 demanda 1
- ( 8, 9)  coste 14 demanda 2
- ( 8, 12)  coste 5 demanda 1
- ( 9, 10)  coste 19 demanda 1
- ( 10, 12)  coste 2 demanda 2
- ( 11, 12)  coste 7 demanda 1
- DEPOSITO :   1
+NAME : gdb10
+VERTICES : 12
+DEPOT : 1
+REQUIRED EDGES : 25
+NON-REQUIRED EDGES : 0
+VEHICLES : 4
+CAPACITY : 10
+TOTAL COST OF REQUIRED EDGES : 252
+NODES  COST  DEMAND
+1 8 9 1
+1 9 4 2
+1 10 13 1
+1 11 12 2
+2 1 11 1
+2 3 15 1
+2 4 18 2
+2 5 8 2
+3 4 8 2
+3 8 18 2
+3 9 6 1
+4 1 7 1
+4 6 10 2
+4 11 17 1
+5 1 9 2
+5 6 15 1
+6 11 3 2
+7 2 6 1
+7 4 11 2
+7 5 5 1
+8 9 14 2
+8 12 5 1
+9 10 19 1
+10 12 2 2
+11 12 7 1
+END
